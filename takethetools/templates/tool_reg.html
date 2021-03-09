@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{%block title%} Neues Werkzeug {%endblock%}
+{% block body %}
+
+{% load crispy_forms_tags %}
+<div class="container">
+    <h1> Neues Werkzeug hinzufügen </h1>
+
+    <form action="{% url 'addtool' %}" method ="post">
+
+        <div class="p-3 border bg-light">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
+            {{ form.name|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-2 mb-0">
+            {{ form.brand|as_crispy_field }}
+          </div>
+
+            <div class="form-group col-md-2 mb-0">
+            {{ form.model|as_crispy_field }}
+          </div>
+            <div class="form-group col-md-1 mb-0">
+            {{ form.price|as_crispy_field }}
+          </div>
+            <div class="form-group col-md-4 mb-0">
+                 {{ form.media }}
+            {{ form.buy_date |as_crispy_field}}
+                 {{ form.widgets }}
+          </div>
+        </div>
+        <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+
+            {{ form.available_amount|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-9 mb-0">
+            {{ form.description|as_crispy_field }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-2 mb-0">
+            {{ form.sec_class|as_crispy_field }}
+          </div>
+            <div class="form-group col-md-2 mb-0">
+            {{ form.trust_class|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-8 mb-0">
+            {{ form.image_link|as_crispy_field }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4 mb-0">
+            {{ form.owner|as_crispy_field }}
+          </div>
+            <div class="form-group col-md-4 mb-0">
+            {{ form.category|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-4 mb-0">
+            {{ form.id|as_crispy_field }}
+          </div>
+        </div>
+
+        <input type="submit" value="Registrieren", class="btn btn-success">
+        </div>
+    </form>
+
+</div>
+{% endblock %}

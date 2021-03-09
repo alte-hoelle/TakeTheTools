@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+Statistik
+{% endblock %}
+
+{% block header %}
+<meta http-equiv="refresh" content="2">
+{% endblock %}
+
+
+{% block body %}
+{% if active %}
+
+<table class="table table-warning">
+	<thead>
+    <tr>
+      <th scope="col">Tool</th>
+      <th scope="col">Ausleihdatum</th>
+      <th scope="col">Erwartete Rückgabe</th>
+      <th scope="col">Ausleiherin</th>
+		<th scope="col">Zweck</th>
+    </tr>
+  </thead>
+
+	{% for log in active %}
+	<tbody>
+		<tr>
+			<td>{{ log.tool }}</td>
+			<td>{{ log.from_date }}</td>
+			<td>{{ log.expected_end_date }}</td>
+			<td>{{ log.lend_by }}</td>
+			<td>{{ log.purpose }}</td>
+		</tr>
+	</tbody>
+
+	{% endfor %}
+</table>
+{% endif %}
+
+{% if returned %}
+<table class="table table-success">
+	<thead>
+		<tr>
+			<th scope="col">Tool</th>
+			<th scope="col">Ausgeliehen am</th>
+			<th scope="col">Rückgabe am</th>
+			<th scope="col">Geliehen von</th>
+			<th scope="col">Rückgabe von</th>
+			<th scope="col">Zweck</th>
+		</tr>
+  	</thead>
+
+	{% for log in returned %}
+	<tbody>
+		<tr>
+			<td>{{ log.tool }}</td>
+			<td>{{ log.from_date }}</td>
+			<td>{{ log.end_date }}</td>
+			<td>{{ log.lend_by }}</td>
+			<td>{{ log.returned_by }}</td>
+			<td>{{ log.purpose }}</td>
+		</tr>
+	</tbody>
+
+	{% endfor %}
+</table>
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+Nutzerinnen
+{% endblock %}
+
+
+{% block body %}
+
+
+		<div class="row">
+			<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h2>Nutzerinnen</h2>
+
+					{% if userdata %}
+						<table class="table table-striped">
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Mail</th>
+							</tr>
+						{% for user in userdata %}
+							<tr>
+								<td>{{ user.id }}</td>
+								<td>{{ user.username }}</td>
+								<td>{{ user.email }}</td>
+							</tr>
+						{% endfor %}
+						</table>
+					{% endif %}
+				</div>
+			</form>
+			<div class="col-md-2"></div>
+		</div>
+
+	{{list}}
+
+	{% for lang in list%}
+	{{lang}}<br>
+	{%endfor%}
+	<hr>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}
+Warenkorb
+{% endblock %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+    <div class="container px-9">
+
+        <div class="row">
+            <div class="col">
+                <div class="p-3 border bg-light">
+                    <h2>Dein Leihkorb</h2>
+                        {% if not cart  %}
+                            Dein Warenkorb ist leer, fülle Ihn indem du Werkzeuge die du ausleihen willst mit dem Barcodescanner einscannst
+                        {% else %}
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                          <th scope="col" class="border-0 bg-light">
+                                            <div class="p-2 px-3 text-uppercase">Werkzeug</div>
+                                          </th>
+                                          <th scope="col" class="border-0 bg-light">
+                                            <div class="py-2 text-uppercase">Beschreibung</div>
+                                          </th>
+                                          <th scope="col" class="border-0 bg-light">
+                                            <div class="py-2 text-uppercase">Besitzerin</div>
+                                          </th>
+                                          <th scope="col" class="border-0 bg-light">
+                                            <div class="py-2 text-uppercase">Remove</div>
+                                          </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, value in cart.items %}
+                                            <tr>
+                                                <th scope="row" class="border-0">
+                                                    <div class="p-2">
+                                                        {% load static %}
+                                                      <img src="/static/{{value.4}}" alt="" width="70" class="img-fluid rounded shadow-sm">
+                                                        <div class="ml-3 d-inline-block align-middle">
+                                                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">{{ value.0 }}</a></h5><span class="text-muted font-weight-normal font-italic d-block">Marke: {{ value.1 }}</span>
+                                                      </div>
+                                                    </div>
+                                                </th>
+                                                <td class="border-0 align-middle"><strong> {{ value.2 }}</strong></td>
+                                                <td class="border-0 align-middle"><strong> {{ value.3 }}</strong></td>
+                                                <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        <a href="/lendit/clearbasket" class="btn btn-default">Storno <3</a>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-5">
+
+            <div class="col">
+                <div class="p-3 border bg-light">
+                    <form action="{% url 'add_to_cart' %}" method ="post">
+                        {% csrf_token %}
+                        {{ add_to_cart.item_id |as_crispy_field }}
+                        <input class="btn btn-success" type="submit" name="add" value="Hinzufügen"/>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row gy-5">
+            <div class="col">
+                <div class="p-3 border bg-light">
+                            <form action="{% url 'checkout' %}" method ="post">
+                            {% csrf_token %}
+                            {{ checkout_form.media }}
+                            {{ checkout_form.expected_end | as_crispy_field }}
+                            {{ checkout_form.purpose |as_crispy_field }}
+                            {{ checkout_form.lendby | as_crispy_field  }}
+                            {{ checkout_form.widgets }}
+                            <input class="btn btn-primary" type="submit" name="lend" value="Leihen" />
+                            </form>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3 border bg-light">
+                            <form action="{%url 'checkout' %}" method="post">
+                                {% csrf_token %}
+                                {{ checkin_form.returned_by|as_crispy_field }}
+                                <input class="btn btn-primary" type="submit" name="return" value="Zurückgeben" />
+                            </form>
+
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
