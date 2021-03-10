@@ -3,3 +3,6 @@ bin/
 lib/
 share/
 db.sqlite3
+.idea/
+migrations/
+__pycache__/

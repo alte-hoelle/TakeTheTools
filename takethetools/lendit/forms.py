@@ -1,9 +1,6 @@
 from django import forms
 from .models import Purpose, Category
-from django.conf import settings
-from .widgets import FengyuanChenDatePickerInput
 from bootstrap_datepicker_plus import DatePickerInput
-from django.forms import SelectDateWidget
 from django.contrib.auth import get_user_model
 
 class UserRegistrationForm(forms.Form):

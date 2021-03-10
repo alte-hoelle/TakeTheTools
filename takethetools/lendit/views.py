@@ -1,29 +1,20 @@
 from django.shortcuts import render, redirect
-from django.shortcuts import HttpResponse
 from .models import Tool, Lendlog, Purpose
 from .forms import CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from django.contrib.auth import get_user_model
-from django.utils import timezone
-from random import random
-from random import randint
-import os
-import string
+from django.contrib import messages
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
-import pytz
+
 import wget
+import os
+import string
+import random
 from barcode.writer import ImageWriter
 from PIL import Image
 from barcode import EAN13
-
-from django.contrib import messages
-
 from datetime import datetime
-# Create your views here.
-toll = 0
-
-
 
 def Tools(request):
 
@@ -130,7 +121,7 @@ def addTool(request):
         print(form.cleaned_data["owner"])
         sub_owner = User.objects.get(username = form.cleaned_data["owner"])
         if form.cleaned_data["id"] in("", None):
-            toolid = int('99'+str(randint(1000000000,9999999999)))
+            toolid = int('99'+str(random.randint(1000000000,9999999999)))
         else:
             toolid = form.cleaned_data["id"]
 
@@ -156,11 +147,10 @@ def addTool(request):
             print(impath)
             print(os.path.join(settings.TOOL_IMAGE_FOLDER, name))
             im.save(impath, "JPEG")
-        # '99'+str(randint(1000000000,9999999999))
 
         with open('somefile.jpeg', 'wb') as f:
             EAN13(str(toolid), writer=ImageWriter()).write(f)
-        # code.save(os.path.join(BARCODE_PATH, code.ean))
+
         toolregister = Tool(
             id = toolid,
             name = form.cleaned_data["name"],
@@ -174,18 +164,14 @@ def addTool(request):
             img_local_link = os.path.join(settings.TOOL_IMAGE_FOLDER, name),
             buy_date = form.cleaned_data["buy_date"]
             )
+
         toolregister.save()
-
-
-        #im.save(os.path.join(settings.STATIC_URL, name), "JPEG")
-
-
         return redirect('tools')
 
-def lendTool(id=0, end=datetime.today(), lender=0, purpose=1):
-    tz = timezone.get_current_timezone()
+def lendTool(id=0, end=datetime.today(), lender=0, purpose="Verein"):
+
     current_tool = Tool.objects.get(id=int(id))
-    purpose = Purpose.objects.get(id=int(purpose))
+    purpose = Purpose.objects.get(name=purpose)
     try:
         user = get_user_model().objects.get(id=int(lender))
     except Exception as e:
@@ -205,7 +191,6 @@ def lendTool(id=0, end=datetime.today(), lender=0, purpose=1):
 
     newlog.save()
 
-
     current_tool.present_amount = current_tool.present_amount - 1
     current_tool.save()
     return True, ""
@@ -219,8 +204,6 @@ def Checkout(request):
     if not ids:
 
         return redirect('cart')
-
-
 
     if 'lend' in request.POST:
         if form.is_valid():
@@ -269,7 +252,6 @@ def Checkout(request):
         pass
     return redirect('cart')
 
-
 @cache_page(60 * 30)
 def addToCart(request):
 
@@ -279,7 +261,6 @@ def addToCart(request):
 
             if Tool.objects.filter(id = int(form.cleaned_data["item_id"])).exists():
 
-                old = ""
                 if cache.get("cart"):
                     old = cache.get("cart")
                     cache.set("cart", old + "," + form.cleaned_data["item_id"])
