@@ -48,7 +48,7 @@ class Sheet:
 
                 elif y_images == 11:
                     print(x_images, y_images,"page finished")
-                    cv2.imwrite("barcodes/page" + str(pages) + ".png", stiched)
+                    cv2.imwrite("page" + str(pages) + ".png", stiched)
                     y_images = 0
                 else:
                     print(x_images, y_images,"next row")
@@ -59,10 +59,8 @@ class Sheet:
 
             #cv2.imwrite("barcodes/" + str(tool[0]) + ".png", image)
 
+        os.system("rm -r barcodes")
 
-
-
-        #os.system("rm -r barcodes")
     def add_tool(self, id):
         tool = Tool.objects.get(id=id)
         for n in range(tool.available_amount):

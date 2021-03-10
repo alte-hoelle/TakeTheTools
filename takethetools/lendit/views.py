@@ -296,7 +296,14 @@ def Cart(request):
             for id in display_cart:
                 if id:
                     temp_tool = Tool.objects.get(id = int(id))
-                    display_dict[i] = [temp_tool.name, temp_tool.brand, temp_tool.description, temp_tool.owner.username, temp_tool.img_local_link]
+                    display_dict[i] = [
+                        temp_tool.name,
+                        temp_tool.brand,
+                        temp_tool.model,
+                        temp_tool.description,
+                        temp_tool.owner.username,
+                        temp_tool.img_local_link
+                    ]
                     i+=1
 
     context = {}
