@@ -12,7 +12,7 @@ import wget
 import os
 import string
 import random
-
+from .barcode_gen import fix_ids_to_EAN13
 from PIL import Image
 
 from datetime import datetime
@@ -262,19 +262,21 @@ def Checkout(request):
 def addToCart(request):
 
     form = AddItemToCartIDForm(request.POST or None)
+
     if "add" in request.POST:
         if form.is_valid():
 
-            if Tool.objects.filter(id = int(form.cleaned_data["item_id"])).exists():
-
+            toolid = form.cleaned_data["item_id"][0:-1]
+            if Tool.objects.filter(id = int(toolid)).exists():
+                print(toolid)
                 if cache.get("cart"):
                     old = cache.get("cart")
-                    cache.set("cart", old + "," + form.cleaned_data["item_id"])
+                    cache.set("cart", old + "," + toolid)
                 else:
-                    cache.set("cart", form.cleaned_data["item_id"])
+                    cache.set("cart", toolid)
 
             else:
-                pass
+                messages.error(request, "Kein valider Barcode")
     elif 'clear' in request.POST:
         cache.delete("cart")
     return redirect('cart')

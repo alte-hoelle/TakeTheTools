@@ -23,6 +23,8 @@ class Sheet:
         print(len(self.ids))
         for tool in self.ids:
             with open("barcodes/" + str(tool[0]) + ".png", 'wb') as f:
+                print(str(tool[0]))
+                print(EAN13())
                 EAN13(str(tool[0]), writer=ImageWriter()).write(f)
 
             image = cv2.imread("barcodes/" + str(tool[0]) + ".png")
@@ -69,3 +71,17 @@ class Sheet:
     def list(self):
         for id in self.ids:
             print(id)
+
+
+def fix_ids_to_EAN13():
+    tools = Tool.objects.all()
+    for tool in tools:
+        if len(str(tool.id)) == 13:
+            tool.delete()
+
+            #prev = tool.id
+            #tool.id = int(str(tool.id)[1:])
+            #print(str(tool), prev, "-->", tool.id)
+            #tool.save()
+            #print(tool.id)
+
