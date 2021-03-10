@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Barcodes exportieren
+{% endblock %}
+
+{% block body %}
+
+{% load crispy_forms_tags %}
+
+<div class="container px-1">
+    <div class="p-3 border bg-light">
+
+        <form action="{% url 'export_pdf' %}" method ="post">
+
+            {% crispy form %}
+            <input type="submit" value="Export PDF" class="btn btn-success">
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

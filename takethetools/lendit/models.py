@@ -1,8 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from datetime import date, datetime
-# Create your models here.
+
 class Category(models.Model):
     name = models.CharField(max_length=30)
     needs_power = models.BooleanField(default=False)
@@ -29,7 +28,7 @@ class Tool(models.Model):
     img_local_link = models.CharField(max_length=120, default="", blank=True, null=True)
 
     def __str__(self):
-        return(str(self.name) + " " + str(self.brand))
+        return str(self.name) + " " + str(self.brand)
 
 class Purpose(models.Model):
     name = models.CharField(max_length=30)
@@ -53,4 +52,4 @@ class Lendlog(models.Model):
     lend_comment = models.CharField(max_length=120, default="")
 
     def __str__(self):
-        return("Tool " + self.tool.name + " by " + str(self.lend_by))
+        return "Tool " + self.tool.name + " by " + str(self.lend_by)

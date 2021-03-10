@@ -144,7 +144,8 @@ BOOTSTRAP4 = {
 ALLOWED_HOSTS = [
     "10.10.0.210",
     "10.10.0.67",
-    "127.0.0.1"
+    "127.0.0.1",
+    "forecastle.dhcp.intern.gv"
 ]
 
 TOOL_IMAGE_FOLDER = "img/tool_icons"

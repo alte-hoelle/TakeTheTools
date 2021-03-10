@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Tool, Lendlog, Purpose, Category
-from .forms import CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
+from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
@@ -62,6 +62,8 @@ def registerUser(request):
     return render(request, 'user_reg.html', context)
 
 def addUser(request):
+
+
     form = UserRegistrationForm(request.POST)
     form_chip = UserRegistrationFormChip(request.POST)
 
@@ -165,7 +167,8 @@ def addTool(request):
             trust_class = form.cleaned_data["trust_class"],
             img_local_link = os.path.join(settings.TOOL_IMAGE_FOLDER, name),
             buy_date = form.cleaned_data["buy_date"],
-            category = Category.objects.get(name = form.cleaned_data["category"])
+            category = Category.objects.get(name = form.cleaned_data["category"]),
+            model = form.cleaned_data["model"]
             )
 
         toolregister.save()
@@ -305,3 +308,20 @@ def Cart(request):
         context["cart"] = False
 
     return render(request, 'cart.html', context)
+
+def exportBarcodes(request):
+
+    context = {
+        "form": ExportSelectionForm
+    }
+
+    return render(request, 'export_barcodes.html', context)
+
+def exportBarcodesPDF(request):
+
+    print("lol")
+    form = exportBarcodes(request.POST or None)
+    if form.is_valid():
+        print("fuck")
+    else:
+        print("lol")

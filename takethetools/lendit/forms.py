@@ -1,5 +1,5 @@
 from django import forms
-from .models import Purpose, Category
+from .models import Purpose, Category, Tool
 from bootstrap_datepicker_plus import DatePickerInput
 from django.contrib.auth import get_user_model
 
@@ -45,4 +45,11 @@ class ToolRegistrationForm(forms.Form):
                                    widget=DatePickerInput(format='%d/%m/%Y'))
     category = forms.ModelChoiceField(label="Kategorie", queryset=Category.objects.all())
     image_link = forms.URLField(label="Bild URL", max_length=300,required=False)
-    # trust class is whajt
+
+class ExportSelectionForm(forms.Form):
+    def __init__(self):
+        super().__init__()
+        tools = Tool.objects.all()
+        for tool in tools:
+            self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
+
