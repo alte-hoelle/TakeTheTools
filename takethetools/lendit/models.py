@@ -19,14 +19,14 @@ class Tool(models.Model):
     brand = models.CharField(max_length=30)
     category = models.ForeignKey(Category, default=None, null=True, on_delete=models.CASCADE)
     price = models.IntegerField()
-    description = models.TextField()
+    description = models.TextField(blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, default=0, on_delete=models.SET_DEFAULT)
     available_amount = models.IntegerField()
     present_amount = models.IntegerField(default=1)
     sec_class = models.IntegerField()
     trust_class = models.IntegerField()
     buy_date = models.DateField(default=timezone.now, null=True, blank=True)
-    img_local_link = models.FilePathField(default="", blank=True, null=True)
+    img_local_link = models.CharField(max_length=120, default="", blank=True, null=True)
 
     def __str__(self):
         return(str(self.name) + " " + str(self.brand))

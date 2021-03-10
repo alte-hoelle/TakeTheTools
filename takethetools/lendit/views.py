@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tool, Lendlog, Purpose
+from .models import Tool, Lendlog, Purpose, Category
 from .forms import CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from django.contrib.auth import get_user_model
 from django.contrib import messages
@@ -135,17 +135,19 @@ def addTool(request):
         if not form.cleaned_data["image_link"]:
             name = "default.png"
         else:
-            image_filename = wget.download(form.cleaned_data["image_link"])
+            try:
+                image_filename = wget.download(form.cleaned_data["image_link"])
+            except Exception as e:
+                print(e)
+                messages.error(request, "Image is not valid: " + str(e))
+                return redirect("registert")
             name = str(toolid) + ".jpg"
             im = Image.open(image_filename)
             im.thumbnail((60, 60), Image.ANTIALIAS)
 
             os.system("rm " + image_filename)
             impath = os.path.join(path_new, "static", "img", "tool_icons", name)
-            print(path)
-            print(path_new)
-            print(impath)
-            print(os.path.join(settings.TOOL_IMAGE_FOLDER, name))
+
             im.save(impath, "JPEG")
 
         with open('somefile.jpeg', 'wb') as f:
@@ -162,7 +164,8 @@ def addTool(request):
             sec_class = form.cleaned_data["sec_class"],
             trust_class = form.cleaned_data["trust_class"],
             img_local_link = os.path.join(settings.TOOL_IMAGE_FOLDER, name),
-            buy_date = form.cleaned_data["buy_date"]
+            buy_date = form.cleaned_data["buy_date"],
+            category = Category.objects.get(name = form.cleaned_data["category"])
             )
 
         toolregister.save()
