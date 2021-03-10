@@ -53,3 +53,9 @@ class ExportSelectionForm(forms.Form):
         for tool in tools:
             self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
 
+    def get_interest_fields(self):
+        for field_name in self.fields:
+            print(self[field_name].value)
+            yield self[field_name]
+
+

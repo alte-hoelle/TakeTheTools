@@ -17,10 +17,12 @@ urlpatterns = [
     path('adduser/', addUser, name='adduser'),
 
     path('export/', exportBarcodes, name='export'),
-    path('export_pdf/', exportBarcodesPDF, name='export_pdf'),
+    path('add_pdf/', exportBarcodesPDF, name='add_pdf'),
+
+    path('cart/', Cart, name='cart'),
+    path('add_to_cart/', addToCart, name='add_to_cart'),
 
     path('clearbasket/', clearbasket, name='clearbasket'),
-    path('cart/', Cart, name='cart'),
+
     path('checkout/', Checkout, name='checkout'),
-    path('add_to_cart/', addToCart, name='add_to_cart')
 ]

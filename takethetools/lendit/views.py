@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Tool, Lendlog, Purpose, Category
 from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
+from .barcode_gen import Sheet
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
@@ -11,9 +12,9 @@ import wget
 import os
 import string
 import random
-from barcode.writer import ImageWriter
+
 from PIL import Image
-from barcode import EAN13
+
 from datetime import datetime
 
 def Tools(request):
@@ -152,8 +153,7 @@ def addTool(request):
 
             im.save(impath, "JPEG")
 
-        with open('somefile.jpeg', 'wb') as f:
-            EAN13(str(toolid), writer=ImageWriter()).write(f)
+
 
         toolregister = Tool(
             id = toolid,
@@ -320,8 +320,12 @@ def exportBarcodes(request):
 def exportBarcodesPDF(request):
 
     print("lol")
-    form = exportBarcodes(request.POST or None)
-    if form.is_valid():
-        print("fuck")
-    else:
-        print("lol")
+    form = ExportSelectionForm()
+    export_sheet = Sheet()
+
+    for field in form.get_interest_fields():
+        export_sheet.add_tool(int(field.name))
+
+    export_sheet.list()
+    export_sheet.export()
+    return redirect('export')
