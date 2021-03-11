@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from .tables import ToolTable
+from django_tables2 import SingleTableView
 from .models import Tool, Lendlog, Purpose, Category
 from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from .barcode_gen import Sheet
@@ -7,6 +9,8 @@ from django.contrib import messages
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
+
+from django.views.generic.list import ListView
 
 import wget
 import os
@@ -17,13 +21,12 @@ from PIL import Image
 
 from datetime import datetime
 
-def Tools(request):
 
-    obj = Tool.objects.all()
-    context = {
-        "tooldata":obj
-    }
-    return render(request, 'items.html', context)
+class ToolList(SingleTableView):
+    template_name = 'items.html'
+    queryset = Tool.objects.all()
+    table_class = ToolTable
+
 
 def Users(request):
     User = get_user_model()

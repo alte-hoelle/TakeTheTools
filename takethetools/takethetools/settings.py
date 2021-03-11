@@ -10,10 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-try:
-    from .secrets import SECRET_KEY
-except Exception:
-    SECRET_KEY = "uWuach6aiRaghaep2mie9Roovahmi9Ia0Eeh0Mohn"
+from .secrets import SECRET_KEY
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms'
+    'crispy_forms',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +155,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
