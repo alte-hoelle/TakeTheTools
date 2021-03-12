@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
+{% load render_table from django_tables2 %}
+
 {% block title %}
-Werkzeuginventar
 Werkzeuginventar
 {% endblock %}
 
@@ -13,34 +14,8 @@ Werkzeuginventar
 			<div class="col-md-2"></div>
 				<div class="col-md-8">
 					<h2>Werkzeuginventar</h2>
-
-					{% if tooldata %}
-						<table class="table table-striped">
-							<tr>
-								<th>ID</th>
-								<th>Bezeichnung</th>
-								<th>Marke</th>
-								<th>Eigentümerin</th>
-								<th>Gefahrenklasse</th>
-								<th>Kommentar</th>
-							</tr>
-						{% for tool in tooldata %}
-							<tr>
-
-								<td>{{ tool.id }} </td>
-								<td>{{ tool.name }} </td>
-								<td>{{ tool.brand }} </td>
-								<td>{{ tool.owner }} </td>
-								<td>{{ tool.sec_class }} </td>
-								<td>{{ tool.description }} </td>
-
-
-							</tr>
-						{% endfor %}
-						</table>
-					{% endif %}
+					{% render_table table %}
 				</div>
-			</form>
 			<div class="col-md-2"></div>
 		</div>
 
