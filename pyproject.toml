@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "takethetools"
+version = "0.1.0"
+description = "A prototype for an easy to user tool and equipment lending tool for open workshops, collectives and fablabs"
+authors = ["stoertebeker23 <stoerte@posteo.net>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.1.7"
+django-bootstrap4 = "^2.3.1"
+django-bootstrap-datepicker-plus = "^3.0.5"
+django-crispy-forms = "^1.11.1"
+python-barcode = "^0.13.1"
+Pillow = "^8.1.2"
+numpy = "^1.20.1"
+wget = "^3.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
