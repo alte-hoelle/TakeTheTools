@@ -10,23 +10,17 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
-from django.views.generic.list import ListView
-
-import wget
 import os
 import string
 import random
-from .barcode_gen import fix_ids_to_EAN13
-from PIL import Image
+from .barcode_gen import download_scale_toolicon
 
 from datetime import datetime
-
 
 class ToolList(SingleTableView):
     template_name = 'items.html'
     queryset = Tool.objects.all()
     table_class = ToolTable
-
 
 def Users(request):
     User = get_user_model()
@@ -37,16 +31,7 @@ def Users(request):
     return render(request, 'users.html', context)
 def Home(request):
 
-    context = {
-        "name": "stoerte"
-    }
-    return render(request, 'home.html', context)
-
-def Registeruser(request):
-    context = {
-        "list": ["fuck", "this", "stupid", "tryhard", "bullshit"]
-    }
-    return render(request, 'users.html', context)
+    return render(request, 'home.html')
 
 def Overview(request):
     active = Lendlog.objects.filter(status = 1)
@@ -124,39 +109,19 @@ def addTool(request):
 
     if form.is_valid():
         User = get_user_model()
-        print(form.cleaned_data["owner"])
         sub_owner = User.objects.get(username = form.cleaned_data["owner"])
         if form.cleaned_data["id"] in("", None):
             toolid = int('99'+str(random.randint(1000000000,9999999999)))
         else:
             toolid = form.cleaned_data["id"]
 
-        path = os.path.abspath(os.path.dirname(__file__))
-        path = path.split("/")
-
-        path.pop(-1)
-        path_new = '/'.join([str(item) for item in path])
-
-        name = ""
         if not form.cleaned_data["image_link"]:
             name = "default.png"
         else:
-            try:
-                image_filename = wget.download(form.cleaned_data["image_link"])
-            except Exception as e:
-                print(e)
-                messages.error(request, "Image is not valid: " + str(e))
-                return redirect("registert")
-            name = str(toolid) + ".jpg"
-            im = Image.open(image_filename)
-            im.thumbnail((60, 60), Image.ANTIALIAS)
-
-            os.system("rm " + image_filename)
-            impath = os.path.join(path_new, "static", "img", "tool_icons", name)
-
-            im.save(impath, "JPEG")
-
-
+            ok, name = download_scale_toolicon(toolid, form.cleaned_data["image_link"])
+            if not ok:
+                messages.error(request, "Image is not valid: " + str(name))
+                return redirect('register_tool')
 
         toolregister = Tool(
             id = toolid,
@@ -184,7 +149,6 @@ def lendTool(id=0, end=datetime.today(), lender=0, purpose="Verein"):
     try:
         user = get_user_model().objects.get(id=int(lender))
     except Exception as e:
-        print(e, lender, current_tool)
         return False, "User was not found"
 
     newlog = Lendlog(
@@ -224,7 +188,7 @@ def Checkout(request):
                          purpose=form.cleaned_data["purpose"],
                          end=form.cleaned_data["expected_end"],
                          lender="1" + form.cleaned_data["lendby"])
-                print(ok, msg)
+
                 if not ok:
                     messages.error(request, msg)
                     return redirect('cart')
@@ -271,7 +235,7 @@ def addToCart(request):
 
             toolid = form.cleaned_data["item_id"][0:-1]
             if Tool.objects.filter(id = int(toolid)).exists():
-                print(toolid)
+
                 if cache.get("cart"):
                     old = cache.get("cart")
                     cache.set("cart", old + "," + toolid)
@@ -331,7 +295,6 @@ def exportBarcodes(request):
 
 def exportBarcodesPDF(request):
 
-    print("lol")
     form = ExportSelectionForm()
     export_sheet = Sheet()
 

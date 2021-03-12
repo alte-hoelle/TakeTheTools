@@ -1,18 +1,21 @@
 
 from django.urls import path
-from .views import Home, Registeruser, Users, Overview, ToolList, registerUser, addUser, registerTool, addTool
+
+from .views import Home, Users, Overview, ToolList, registerUser, addUser, registerTool, addTool
+
 from .views import Cart, Checkout, addToCart, clearbasket, exportBarcodes, exportBarcodesPDF
 
 urlpatterns = [
     path('', Home, name='home'),
 
-    path('display_users/', Registeruser, name='reguser'),
+    path('display_users/', registerUser, name='reguser'),
     path('tools/', ToolList.as_view(), name='tools'),
+
     path('users/', Users, name='users'),
     path('overview/', Overview, name='overview'),
-    path('register/', registerUser, name='register'),
-    path('registert/', registerTool, name='registert'),
+    path('register_user/', registerUser, name='register_user'),
 
+    path('register_tool/', registerTool, name='register_tool'),
     path('addtool/', addTool, name='addtool'),
     path('adduser/', addUser, name='adduser'),
 
