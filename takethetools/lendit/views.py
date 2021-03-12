@@ -4,6 +4,7 @@ from django_tables2 import SingleTableView
 from .models import Tool, Lendlog, Purpose, Category
 from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from .barcode_gen import Sheet
+from .helpers import make_ids_barcode_field
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
@@ -30,7 +31,7 @@ def Users(request):
     }
     return render(request, 'users.html', context)
 def Home(request):
-
+    #make_ids_barcode_field()
     return render(request, 'home.html')
 
 def Overview(request):
@@ -124,7 +125,7 @@ def addTool(request):
                 return redirect('register_tool')
 
         toolregister = Tool(
-            id = toolid,
+
             name = form.cleaned_data["name"],
             brand = form.cleaned_data["brand"],
             price = form.cleaned_data["price"],
@@ -136,7 +137,9 @@ def addTool(request):
             img_local_link = os.path.join(settings.TOOL_IMAGE_FOLDER, name),
             buy_date = form.cleaned_data["buy_date"],
             category = Category.objects.get(name = form.cleaned_data["category"]),
-            model = form.cleaned_data["model"]
+            model = form.cleaned_data["model"],
+            barcode_ean13_no_check_bit = toolid,
+            used_img_urls = form.cleaned_data["image_link"]
             )
 
         toolregister.save()
@@ -144,7 +147,7 @@ def addTool(request):
 
 def lendTool(id=0, end=datetime.today(), lender=0, purpose="Verein"):
 
-    current_tool = Tool.objects.get(id=int(id))
+    current_tool = Tool.objects.get(barcode_ean13_no_check_bit=id)
     purpose = Purpose.objects.get(name=purpose)
     try:
         user = get_user_model().objects.get(id=int(lender))
@@ -212,7 +215,7 @@ def Checkout(request):
                     lend.returned_by = returner
                     lend.end_date = datetime.today()
                     lend.status = 0
-                    idlist.remove(str(lend.tool.id))
+                    idlist.remove(str(lend.tool.barcode_ean13_no_check_bit))
                     return_cnt += 1
                     lend.save()
             if not idlist:
@@ -233,8 +236,9 @@ def addToCart(request):
     if "add" in request.POST:
         if form.is_valid():
 
-            toolid = form.cleaned_data["item_id"][0:-1]
-            if Tool.objects.filter(id = int(toolid)).exists():
+            toolid = form.cleaned_data["item_id"]
+            print(toolid)
+            if Tool.objects.filter(barcode_ean13_no_check_bit = toolid).exists():
 
                 if cache.get("cart"):
                     old = cache.get("cart")
@@ -262,7 +266,7 @@ def Cart(request):
             i = 1
             for id in display_cart:
                 if id:
-                    temp_tool = Tool.objects.get(id = int(id))
+                    temp_tool = Tool.objects.get(barcode_ean13_no_check_bit = id)
                     display_dict[i] = [
                         temp_tool.name,
                         temp_tool.brand,

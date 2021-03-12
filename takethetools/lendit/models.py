@@ -26,6 +26,8 @@ class Tool(models.Model):
     trust_class = models.IntegerField()
     buy_date = models.DateField(default=timezone.now, null=True, blank=True)
     img_local_link = models.CharField(max_length=120, default="", blank=True, null=True)
+    used_img_urls = models.URLField(default="", blank=True)
+    barcode_ean13_no_check_bit = models.CharField(max_length=12, default="999999999999")
 
     def __str__(self):
         return str(self.name) + " " + str(self.brand)
