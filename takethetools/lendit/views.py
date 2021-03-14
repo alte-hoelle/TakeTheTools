@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from .tables import ToolTable
 from django_tables2 import SingleTableView
-from .models import Tool, Lendlog, Purpose, Category
+from .models import Tool, Lendlog, Purpose, Category, CustomUser
 from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from .barcode_gen import Sheet
 from django.contrib.auth import get_user_model
+from .helpers import create_custom_user_models
 from django.contrib import messages
 from django.conf import settings
-
+from django.contrib.auth.hashers import make_password
 import os
 import string
 import random
@@ -23,11 +24,13 @@ class ToolList(SingleTableView):
 def Users(request):
     User = get_user_model()
     obj = User.objects.all()
+
     context = {
         "userdata":obj
     }
     return render(request, 'users.html', context)
 def Home(request):
+    #create_custom_user_models()
     return render(request, 'home.html')
 
 def Overview(request):
@@ -75,7 +78,6 @@ def addUser(request):
     elif form_chip.is_valid():
         User = get_user_model()
         newuser = User(
-            id = int("1" + form_chip.cleaned_data["chip_id"]),
             password="",
             last_login=datetime.now(),
             is_superuser=0,
@@ -87,10 +89,20 @@ def addUser(request):
             date_joined=datetime.now(),
             first_name=""
         )
-
-        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(12))
+        salt = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
         newuser.set_password(output_string)
         newuser.save()
+        newcustomuser = CustomUser(
+            user = newuser,
+            chip_id =  make_password(form_chip.cleaned_data["chip_id"], salt),
+            salt = salt
+        )
+
+
+        newuser.set_password(output_string)
+        newcustomuser.save()
+
         return redirect('users')
     else:
         return redirect('index')
@@ -105,10 +117,10 @@ def addTool(request):
     form = ToolRegistrationForm(request.POST)
 
     if form.is_valid():
-        User = get_user_model()
-        sub_owner = User.objects.get(username = form.cleaned_data["owner"])
+        user = get_user_model()
+        sub_owner = user.objects.get(username = form.cleaned_data["owner"])
         if form.cleaned_data["id"] in("", None):
-            toolid = int('99'+str(random.randint(1000000000,9999999999)))
+            toolid = '99'+str(random.randint(1000000000,9999999999))
         else:
             toolid = form.cleaned_data["id"]
 

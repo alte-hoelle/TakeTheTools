@@ -1,6 +1,15 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    chip_id = models.CharField(max_length=512)
+    chip_salt = models.CharField(max_length=12, default="")
+
+    def __str__(self):
+        return self.user.username + " " + self.chip_id
 
 class Category(models.Model):
     name = models.CharField(max_length=30)

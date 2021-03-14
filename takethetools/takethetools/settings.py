@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'lendit',
     'bootstrap4',
     'bootstrap_datepicker_plus',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
