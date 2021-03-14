@@ -30,7 +30,6 @@ def Users(request):
     }
     return render(request, 'users.html', context)
 def Home(request):
-    #create_custom_user_models()
     return render(request, 'home.html')
 
 def Overview(request):
@@ -89,14 +88,12 @@ def addUser(request):
             date_joined=datetime.now(),
             first_name=""
         )
-        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(12))
-        salt = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(32))
         newuser.set_password(output_string)
         newuser.save()
         newcustomuser = CustomUser(
             user = newuser,
-            chip_id =  make_password(form_chip.cleaned_data["chip_id"], salt),
-            salt = salt
+            chip_id =  make_password(form_chip.cleaned_data["chip_id"], settings.CHIP_SALT)
         )
 
 
@@ -153,12 +150,12 @@ def addTool(request):
         toolregister.save()
         return redirect('tools')
 
-def lendTool(id=0, end=datetime.today(), lender=0, purpose="Verein"):
+def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
 
-    current_tool = Tool.objects.get(barcode_ean13_no_check_bit=id)
+    current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
     purpose = Purpose.objects.get(name=purpose)
     try:
-        user = get_user_model().objects.get(id=int(lender))
+        user = CustomUser.objects.get(chip_id = lender)
     except Exception as e:
         return False, "User was not found"
 
@@ -195,10 +192,10 @@ def Checkout(request):
             idlist = ids.split(",")
             for id in idlist:
 
-                ok, msg = lendTool(id=id,
+                ok, msg = lendTool(barcode=id,
                          purpose=form.cleaned_data["purpose"],
                          end=form.cleaned_data["expected_end"],
-                         lender="1" + form.cleaned_data["lendby"])
+                         lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT))
 
                 if not ok:
                     messages.error(request, msg)
@@ -211,7 +208,7 @@ def Checkout(request):
 
         if form_in.is_valid():
             try:
-                returner = get_user_model().objects.get(id=int("1" + form_in.cleaned_data["returned_by"]))
+                returner = CustomUser.objects.get(chip_id = make_password(form_in.cleaned_data["returned_by"], settings.CHIP_SALT))
             except Exception as e:
                 messages.error(request, "User/Chip ID not found")
                 return
