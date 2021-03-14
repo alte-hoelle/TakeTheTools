@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.views.generic.base import TemplateView
 
 from lendit.barcode_gen import Sheet, download_scale_toolicon
 from lendit.forms import (
@@ -21,24 +22,26 @@ from lendit.forms import (
     UserRegistrationFormChip,
 )
 from lendit.models import Tool, Lendlog, Purpose, Category
-from lendit.tables import ToolTable
+from lendit.tables import ToolTable, UserTable
 
 
 class ToolList(SingleTableView):
-    template_name = "items.html"
+    template_name = "tool_list.html"
     queryset = Tool.objects.all()
     table_class = ToolTable
 
 
-def Users(request):
-    User = get_user_model()
-    obj = User.objects.all()
-    context = {"userdata": obj}
-    return render(request, "users.html", context)
+class UserList(SingleTableView):
+    template_name = "user_list.html"
+    table_class = UserTable
+
+    def get_queryset(self, *args, **kwargs):
+        User = get_user_model()
+        return User.objects.all()
 
 
-def Home(request):
-    return render(request, "home.html")
+class Home(TemplateView):
+    template_name = "home.html"
 
 
 def Overview(request):
