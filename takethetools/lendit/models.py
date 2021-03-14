@@ -1,6 +1,14 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    chip_id = models.CharField(max_length=512)
+
+    def __str__(self):
+        return self.user.username
 
 class Category(models.Model):
     name = models.CharField(max_length=30)
@@ -46,8 +54,8 @@ class Lendlog(models.Model):
     expected_end_date = models.DateField(default=timezone.now)
     end_date = models.DateField(blank=True, null=True, default=timezone.now)
     status = models.IntegerField(default=False)
-    lend_by = models.ForeignKey(settings.AUTH_USER_MODEL, default=0, on_delete=models.CASCADE, related_name="lender")
-    returned_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, default=0, on_delete=models.CASCADE,
+    lend_by = models.ForeignKey(CustomUser, default=0, on_delete=models.CASCADE, related_name="lender")
+    returned_by = models.ForeignKey(CustomUser, null=True, blank=True, default=0, on_delete=models.CASCADE,
                                     related_name="returner")
     purpose = models.ForeignKey(Purpose, default=0, on_delete=models.SET_DEFAULT)
     return_comment = models.CharField(max_length=120, default="")

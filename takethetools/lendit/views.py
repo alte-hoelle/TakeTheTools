@@ -6,6 +6,7 @@ from datetime import datetime
 from django_tables2 import SingleTableView
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -39,11 +40,10 @@ class UserList(SingleTableView):
         User = get_user_model()
         return User.objects.all()
 
-
 class Home(TemplateView):
     template_name = "home.html"
 
-
+    
 def Overview(request):
     active = Lendlog.objects.filter(status=1)
     inactive = Lendlog.objects.filter(status=0)
@@ -84,7 +84,6 @@ def addUser(request):
     elif form_chip.is_valid():
         User = get_user_model()
         newuser = User(
-            id=int("1" + form_chip.cleaned_data["chip_id"]),
             password="",
             last_login=datetime.now(),
             is_superuser=0,
@@ -97,13 +96,19 @@ def addUser(request):
             first_name="",
         )
 
-        output_string = "".join(
-            random.SystemRandom().choice(string.ascii_letters + string.digits)
-            for _ in range(10)
-        )
+        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(32))
         newuser.set_password(output_string)
         newuser.save()
-        return redirect("users")
+        newcustomuser = CustomUser(
+            user = newuser,
+            chip_id =  make_password(form_chip.cleaned_data["chip_id"], settings.CHIP_SALT)
+        )
+
+
+        newuser.set_password(output_string)
+        newcustomuser.save()
+
+        return redirect('users')
     else:
         return redirect("index")
 
@@ -117,10 +122,12 @@ def addTool(request):
     form = ToolRegistrationForm(request.POST)
 
     if form.is_valid():
-        User = get_user_model()
-        sub_owner = User.objects.get(username=form.cleaned_data["owner"])
-        if form.cleaned_data["id"] in ("", None):
-            toolid = int("99" + str(random.randint(1000000000, 9999999999)))
+
+        user = get_user_model()
+        sub_owner = user.objects.get(username = form.cleaned_data["owner"])
+        if form.cleaned_data["id"] in("", None):
+            toolid = '99'+str(random.randint(1000000000,9999999999))
+
         else:
             toolid = form.cleaned_data["id"]
 
@@ -153,12 +160,12 @@ def addTool(request):
         return redirect("tools")
 
 
-def lendTool(id=0, end=datetime.today(), lender=0, purpose="Verein"):
+def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
 
-    current_tool = Tool.objects.get(barcode_ean13_no_check_bit=id)
+    current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
     purpose = Purpose.objects.get(name=purpose)
     try:
-        user = get_user_model().objects.get(id=int(lender))
+        user = CustomUser.objects.get(chip_id = lender)
     except Exception as e:
         return False, "User was not found"
 
@@ -195,13 +202,11 @@ def Checkout(request):
 
             idlist = ids.split(",")
             for id in idlist:
+                ok, msg = lendTool(barcode=id,
+                         purpose=form.cleaned_data["purpose"],
+                         end=form.cleaned_data["expected_end"],
+                         lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT))
 
-                ok, msg = lendTool(
-                    id=id,
-                    purpose=form.cleaned_data["purpose"],
-                    end=form.cleaned_data["expected_end"],
-                    lender="1" + form.cleaned_data["lendby"],
-                )
 
                 if not ok:
                     messages.error(request, msg)
@@ -214,9 +219,9 @@ def Checkout(request):
 
         if form_in.is_valid():
             try:
-                returner = get_user_model().objects.get(
-                    id=int("1" + form_in.cleaned_data["returned_by"])
-                )
+
+                returner = CustomUser.objects.get(chip_id = make_password(form_in.cleaned_data["returned_by"], settings.CHIP_SALT))
+
             except Exception as e:
                 messages.error(request, "User/Chip ID not found")
                 return

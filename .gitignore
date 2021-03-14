@@ -11,3 +11,4 @@ secrets.py
 5*.jpg
 old/
 page*.png
+*.pdf
