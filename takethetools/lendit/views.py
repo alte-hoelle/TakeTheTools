@@ -4,12 +4,9 @@ from django_tables2 import SingleTableView
 from .models import Tool, Lendlog, Purpose, Category
 from .forms import ExportSelectionForm, CheckoutForm, CheckinForm, AddItemToCartIDForm, UserRegistrationForm, ToolRegistrationForm, UserRegistrationFormChip
 from .barcode_gen import Sheet
-from .helpers import make_ids_barcode_field
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 
 import os
 import string
@@ -31,7 +28,6 @@ def Users(request):
     }
     return render(request, 'users.html', context)
 def Home(request):
-    #make_ids_barcode_field()
     return render(request, 'home.html')
 
 def Overview(request):
@@ -176,7 +172,7 @@ def Checkout(request):
     form = CheckoutForm(request.POST)
     form_in = CheckinForm(request.POST)
 
-    ids = cache.get("cart")
+    ids = request.session["cart"]
     if not ids:
 
         return redirect('cart')
@@ -197,7 +193,7 @@ def Checkout(request):
                     return redirect('cart')
 
             clearbasket(request)
-            messages.success(request, "Voll ausgeliehen! Geilo!")
+            messages.success(request, "Alles ausgeliehen!")
 
     elif 'return' in request.POST:
 
@@ -219,48 +215,58 @@ def Checkout(request):
                     return_cnt += 1
                     lend.save()
             if not idlist:
-                cache.set("cart", "")
+                request.session["cart"] = ""
                 messages.success(request, "Alle " + str(return_cnt) + " Werkzeuge zurück gegeben")
             else:
-                cache.set("cart",','.join([str(item) for item in idlist]))
+                request.session["cart"] = ','.join([str(item) for item in idlist])
                 messages.warning(request, str(return_cnt) + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?")
     else:
         pass
     return redirect('cart')
 
-@cache_page(60 * 30)
+
 def addToCart(request):
 
     form = AddItemToCartIDForm(request.POST or None)
 
     if "add" in request.POST:
         if form.is_valid():
+            barcode = form.cleaned_data["item_id"]
+            if len(barcode) == 13:
+                toolid = barcode[0:-1]
+            elif len(barcode) == 12:
+                toolid = barcode
+            else:
+                messages.error(request, "Kein gültiger Barcode")
+                return redirect('cart')
 
-            toolid = form.cleaned_data["item_id"]
-            print(toolid)
             if Tool.objects.filter(barcode_ean13_no_check_bit = toolid).exists():
 
-                if cache.get("cart"):
-                    old = cache.get("cart")
-                    cache.set("cart", old + "," + toolid)
+                if request.session["cart"]:
+                    old = request.session["cart"]
+                    request.session["cart"] = old + "," + toolid
                 else:
-                    cache.set("cart", toolid)
+                    request.session["cart"] = toolid
 
             else:
                 messages.error(request, "Kein valider Barcode")
     elif 'clear' in request.POST:
-        cache.delete("cart")
+        del request.session["cart"]
     return redirect('cart')
 
 def clearbasket(request):
-    cache.delete("cart")
+    del request.session["cart"]
     return redirect('cart')
 
 def Cart(request):
 
     display_dict = {}
-    if cache.get("cart"):
-        display_cart = cache.get("cart").split(",")
+    try:
+        request.session["cart"]
+    except KeyError:
+        request.session["cart"] = ""
+    if request.session["cart"]:
+        display_cart = request.session["cart"].split(",")
 
         if display_cart:
             i = 1
