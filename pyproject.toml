@@ -15,6 +15,7 @@ Pillow = "^8.1.2"
 numpy = "^1.20.1"
 wget = "^3.2"
 django-tables2 = "^2.3.4"
+django-filter = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"

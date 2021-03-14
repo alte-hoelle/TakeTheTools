@@ -1,6 +1,5 @@
 from django.urls import path
 from lendit.views import (
-    addTool,
     addToCart,
     addUser,
     Cart,
@@ -11,7 +10,7 @@ from lendit.views import (
     Home,
     Overview,
     registerUser,
-    registerTool,
+    ToolCreate,
     ToolList,
     UserList,
 )
@@ -23,8 +22,7 @@ urlpatterns = [
     path("users/", UserList.as_view(), name="users"),
     path("overview/", Overview, name="overview"),
     path("register_user/", registerUser, name="register_user"),
-    path("register_tool/", registerTool, name="register_tool"),
-    path("addtool/", addTool, name="addtool"),
+    path('tool/create', ToolCreate.as_view(), name='tool_create'),
     path("adduser/", addUser, name="adduser"),
     path("export/", exportBarcodes, name="export"),
     path("add_pdf/", exportBarcodesPDF, name="add_pdf"),
