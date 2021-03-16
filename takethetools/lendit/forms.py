@@ -3,8 +3,8 @@ from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.core.exceptions import ValidationError
 
-from lendit.barcode_gen import download_scale_toolicon
-from lendit.models import Purpose, Tool
+from .barcode_gen import download_scale_toolicon
+from .models import Purpose, Tool
 
 
 class UserRegistrationForm(forms.Form):
@@ -61,6 +61,20 @@ class ToolRegistrationForm(forms.ModelForm):
         )
         widgets = {
             'buy_date' : DatePickerInput(format='%Y-%m-%d')
+        }
+        labels = {
+            'name' : 'Bezeichnung',
+            'model' : 'Modellnummer',
+            'brand' : 'Marke',
+            'price' : 'Kaufpreis',
+            'description' : 'Kommentar',
+            'owner' : 'Eigentümerin',
+            'available_amount' : 'Verfügbare Menge',
+            'sec_class' : 'Sicherheitsklasse',
+            'trust_class' : 'Vertrauensklasse',
+            'buy_date' : 'Kaufdatum',
+            'category' : 'Kategorie',
+            'barcode_ean13_no_check_bit' : 'Barcode'
         }
 
     def clean(self):
