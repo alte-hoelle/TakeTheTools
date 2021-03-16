@@ -6,10 +6,18 @@
 <div class="container">
     <h1> Neues Werkzeug hinzufügen </h1>
 
-    <form action="{% url 'addtool' %}" method ="post">
+    <form action="{% url 'tool_create' %}" method ="post">
 
         <div class="p-3 border bg-light">
         {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Fehler!</strong>{{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
         <div class="form-row">
           <div class="form-group col-md-3 mb-0">
             {{ form.name|as_crispy_field }}
@@ -60,7 +68,7 @@
             {{ form.category|as_crispy_field }}
           </div>
           <div class="form-group col-md-4 mb-0">
-            {{ form.id|as_crispy_field }}
+            {{ form.barcode_ean13_no_check_bit|as_crispy_field }}
           </div>
         </div>
 
