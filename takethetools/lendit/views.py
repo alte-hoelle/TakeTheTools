@@ -13,7 +13,7 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 
-from lendit.forms import (
+from .forms import (
     ExportSelectionForm,
     CheckoutForm,
     CheckinForm,
@@ -22,8 +22,8 @@ from lendit.forms import (
     ToolRegistrationForm,
     UserRegistrationFormChip,
 )
-from lendit.models import Tool, Lendlog, Purpose
-from lendit.tables import ToolTable, UserTable
+from .models import Tool, Lendlog, Purpose, CustomUser
+from .tables import ToolTable, UserTable
 
 
 class ToolList(SingleTableView):
@@ -160,15 +160,17 @@ def Checkout(request):
         return redirect("cart")
 
     if "lend" in request.POST:
+        #print(form.cleaned_data["lendby"])
         if form.is_valid():
 
             idlist = ids.split(",")
             for id in idlist:
-                ok, msg = lendTool(barcode=id,
-                         purpose=form.cleaned_data["purpose"],
-                         end=form.cleaned_data["expected_end"],
-                         lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT))
-
+                ok, msg = lendTool(
+                        barcode=id,
+                        purpose=form.cleaned_data["purpose"],
+                        end=form.cleaned_data["expected_end"],
+                        lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT)
+                )
 
                 if not ok:
                     messages.error(request, msg)

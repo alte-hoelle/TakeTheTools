@@ -59,6 +59,9 @@ class ToolRegistrationForm(forms.ModelForm):
             'category',
             'barcode_ean13_no_check_bit'
         )
+        widgets = {
+            'buy_date' : DatePickerInput(format='%Y-%m-%d')
+        }
 
     def clean(self):
         cleaned_data = super().clean()

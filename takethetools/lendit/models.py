@@ -3,14 +3,15 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from .utils import gen_random_ean13_no_checkbit
+
+
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     chip_id = models.CharField(max_length=512)
 
     def __str__(self):
         return self.user.username
-
-from lendit.utils import gen_random_ean13_no_checkbit
 
 
 class Category(models.Model):
@@ -67,19 +68,20 @@ class Lendlog(models.Model):
     end_date = models.DateField(blank=True, null=True, default=timezone.now)
     status = models.IntegerField(default=False)
     lend_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        CustomUser,
         default=0,
         on_delete=models.CASCADE,
         related_name="lender",
     )
     returned_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        CustomUser,
         null=True,
         blank=True,
         default=0,
         on_delete=models.CASCADE,
         related_name="returner",
     )
+
     purpose = models.ForeignKey(Purpose, default=0, on_delete=models.SET_DEFAULT)
     return_comment = models.CharField(max_length=120, default="")
     lend_comment = models.CharField(max_length=120, default="")
