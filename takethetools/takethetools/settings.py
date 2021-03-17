@@ -16,7 +16,7 @@ from .secrets import CHIP_SALT
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -145,6 +146,11 @@ ALLOWED_HOSTS = [
 
 TOOL_IMAGE_FOLDER = "img/tool_icons"
 
+MEDIA_URL = 'media/'
+
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
@@ -153,3 +159,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+#{% load static %}
+#<img src="{% static "images/hi.jpg" %}" alt="Hi!" />
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

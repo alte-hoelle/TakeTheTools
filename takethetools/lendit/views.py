@@ -24,7 +24,8 @@ from .forms import (
 )
 from .models import Tool, Lendlog, Purpose, CustomUser
 from .tables import ToolTable, UserTable
-
+from .barcode_gen import Sheet
+from .helpers import migrate_pictures
 
 class ToolList(SingleTableView):
     template_name = "tool_list.html"
@@ -42,6 +43,7 @@ class UserList(SingleTableView):
 
 
 class Home(TemplateView):
+    migrate_pictures()
     template_name = "home.html"
 
 

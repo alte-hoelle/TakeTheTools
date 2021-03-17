@@ -2,6 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
+from PIL import Image
+from io import StringIO
+from django.core.files.base import ContentFile
 
 from .utils import gen_random_ean13_no_checkbit
 
@@ -26,6 +29,32 @@ class Category(models.Model):
         return self.name
 
 
+class CustomImage(models.Model):
+    image = models.ImageField(upload_to='icons')
+    supplied_source = models.URLField(default="", blank=True)
+
+    def save(self, path='', *args, **kwargs):
+        try:
+            pilimage = Image.open(path)
+        except:
+            pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+
+        try:
+            filename = path.split("/")[-1]
+            self.image = filename
+            tempfile = pilimage
+
+            tempfile_io = StringIO()
+
+            #tempfile.save(filename, format=pilimage.format)
+
+            self.image.save(filename, ContentFile(tempfile_io.getvalue()), save=False)
+        except Exception as e:
+            print("Error saving Image", e)
+
+        super(CustomImage, self).save(*args, **kwargs)
+
+
 class Tool(models.Model):
     name = models.CharField(max_length=30)
     model = models.CharField(max_length=30, default="", blank=True)
@@ -44,6 +73,13 @@ class Tool(models.Model):
     trust_class = models.IntegerField()
     buy_date = models.DateField(default=timezone.now, null=True, blank=True)
     img_local_link = models.CharField(max_length=120, default="", blank=True, null=True)
+    img = models.ForeignKey(
+        CustomImage,
+        default=None,#CustomImage.objects.get(description="Default"),
+        on_delete=models.SET_DEFAULT,
+        blank=True,
+        null=True
+    )
     used_img_urls = models.URLField(default="", blank=True)
     barcode_ean13_no_check_bit = models.CharField(
         unique=True, max_length=12, default=gen_random_ean13_no_checkbit

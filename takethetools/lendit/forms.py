@@ -41,8 +41,6 @@ class ToolRegistrationForm(forms.ModelForm):
     occurs during this step, a ValidationError is raised.
     """
 
-    image_link = forms.URLField(label="Bild URL", max_length=300,required=False)
-
     class Meta:
         model = Tool
         fields = (
@@ -57,24 +55,26 @@ class ToolRegistrationForm(forms.ModelForm):
             'trust_class',
             'buy_date',
             'category',
-            'barcode_ean13_no_check_bit'
+            'barcode_ean13_no_check_bit',
+            'used_img_urls'
         )
         widgets = {
-            'buy_date' : DatePickerInput(format='%Y-%m-%d')
+            'buy_date': DatePickerInput(format='%Y-%m-%d')
         }
         labels = {
-            'name' : 'Bezeichnung',
-            'model' : 'Modellnummer',
-            'brand' : 'Marke',
-            'price' : 'Kaufpreis',
-            'description' : 'Kommentar',
-            'owner' : 'Eigentümerin',
-            'available_amount' : 'Verfügbare Menge',
-            'sec_class' : 'Sicherheitsklasse',
-            'trust_class' : 'Vertrauensklasse',
-            'buy_date' : 'Kaufdatum',
-            'category' : 'Kategorie',
-            'barcode_ean13_no_check_bit' : 'Barcode'
+            'name': 'Bezeichnung',
+            'model': 'Modellnummer',
+            'brand': 'Marke',
+            'price': 'Kaufpreis',
+            'description': 'Kommentar',
+            'owner': 'Eigentümerin',
+            'available_amount': 'Verfügbare Menge',
+            'sec_class': 'Sicherheitsklasse',
+            'trust_class': 'Vertrauensklasse',
+            'buy_date': 'Kaufdatum',
+            'category': 'Kategorie',
+            'barcode_ean13_no_check_bit': 'Barcode',
+            'used_img_urls': 'Bild URL'
         }
 
     def clean(self):
