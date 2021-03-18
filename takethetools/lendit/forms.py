@@ -3,7 +3,6 @@ from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .barcode_gen import download_scale_toolicon
 from .models import Purpose, Tool, CustomImage
 
 
@@ -81,7 +80,7 @@ class ToolRegistrationForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         image_link = cleaned_data.get('link')
-        tool_id = cleaned_data.get('barcode_ean13_no_check_bit')
+        #tool_id = cleaned_data.get('barcode_ean13_no_check_bit')
         im = CustomImage()
         im.supplied_source = cleaned_data.get('link')
         f_name = cleaned_data.get('name') + '_' + \
@@ -97,9 +96,10 @@ class ToolRegistrationForm(forms.ModelForm):
             cleaned_data['image_path'] = 'default.png'
             return cleaned_data
         else:
-            ok, name = download_scale_toolicon(tool_id, image_link)
-            if not ok:
-                raise ValidationError('Image from given Link not downloadable or not an Image.')
+            pass
+            #ok, name = download_scale_toolicon(tool_id, image_link)
+            ##if not ok:
+            #    raise ValidationError('Image from given Link not downloadable or not an Image.')
 
 
 class ExportSelectionForm(forms.Form):
