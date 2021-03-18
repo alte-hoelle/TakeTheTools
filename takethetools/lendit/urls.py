@@ -1,5 +1,5 @@
 from django.urls import path
-from lendit.views import (
+from .views import (
     addToCart,
     addUser,
     Cart,

@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .barcode_gen import download_scale_toolicon
-from .models import Purpose, Tool
+from .models import Purpose, Tool, CustomImage
 
 
 class UserRegistrationForm(forms.Form):
@@ -40,6 +40,7 @@ class ToolRegistrationForm(forms.ModelForm):
     image from the image-url (if any) is downloaded and saved. If any error
     occurs during this step, a ValidationError is raised.
     """
+    link = forms.URLField(label="Bild URL")
 
     class Meta:
         model = Tool
@@ -56,7 +57,7 @@ class ToolRegistrationForm(forms.ModelForm):
             'buy_date',
             'category',
             'barcode_ean13_no_check_bit',
-            'used_img_urls'
+            'img'
         )
         widgets = {
             'buy_date': DatePickerInput(format='%Y-%m-%d')
@@ -74,14 +75,24 @@ class ToolRegistrationForm(forms.ModelForm):
             'buy_date': 'Kaufdatum',
             'category': 'Kategorie',
             'barcode_ean13_no_check_bit': 'Barcode',
-            'used_img_urls': 'Bild URL'
+
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        image_link = cleaned_data.get('image_link')
+        image_link = cleaned_data.get('link')
         tool_id = cleaned_data.get('barcode_ean13_no_check_bit')
+        im = CustomImage()
+        im.supplied_source = cleaned_data.get('link')
+        f_name = cleaned_data.get('name') + '_' + \
+                 cleaned_data.get('brand') + '_' + \
+                 cleaned_data.get('model') + '_' + \
+                 cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
 
+        if not im.save(cleaned_data.get('link'), f_name):
+            raise ValidationError('Image from given Link not downloadable or not an Image.')
+
+        cleaned_data['img'] = im
         if not image_link:
             cleaned_data['image_path'] = 'default.png'
             return cleaned_data

@@ -43,7 +43,7 @@ class UserList(SingleTableView):
 
 
 class Home(TemplateView):
-    migrate_pictures()
+    #migrate_pictures()
     template_name = "home.html"
 
 

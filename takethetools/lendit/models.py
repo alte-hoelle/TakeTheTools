@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from PIL import Image
 from io import StringIO
 from django.core.files.base import ContentFile
+from django.core.files import File
+import urllib3
+import requests # to get image from the web
+import shutil # to save it locally
 
 from .utils import gen_random_ean13_no_checkbit
 
@@ -32,27 +36,41 @@ class Category(models.Model):
 class CustomImage(models.Model):
     image = models.ImageField(upload_to='icons')
     supplied_source = models.URLField(default="", blank=True)
+    description = models.CharField(max_length=100, default="", blank=True)
 
-    def save(self, path='', *args, **kwargs):
+    def __str__(self):
+        return str(self.image)
+
+    def save(self, path='',filename="", *args, **kwargs):
+        if "http" in path:
+
+            r = requests.get(path, stream=True)
+            if r.status_code == 200:
+
+                r.raw.decode_content = True
+                im = Image.open(r.raw)
+                im.thumbnail((60, 60), Image.ANTIALIAS)
+                im.save("media/icons/" + filename)
+
+            else:
+                return False
+
+        else:
+            return False
+            # Implement local picture uploading
+            #try:
+            #    pilimage = Image.open(path)
+            #except:
+            #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+
         try:
-            pilimage = Image.open(path)
-        except:
-            pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+            self.image = "icons/" + filename
 
-        try:
-            filename = path.split("/")[-1]
-            self.image = filename
-            tempfile = pilimage
-
-            tempfile_io = StringIO()
-
-            #tempfile.save(filename, format=pilimage.format)
-
-            self.image.save(filename, ContentFile(tempfile_io.getvalue()), save=False)
         except Exception as e:
-            print("Error saving Image", e)
-
+            return False
         super(CustomImage, self).save(*args, **kwargs)
+
+        return True
 
 
 class Tool(models.Model):
@@ -76,7 +94,7 @@ class Tool(models.Model):
     img = models.ForeignKey(
         CustomImage,
         default=None,#CustomImage.objects.get(description="Default"),
-        on_delete=models.SET_DEFAULT,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True
     )
