@@ -7,8 +7,8 @@ db.sqlite3*
 migrations/
 __pycache__/
 secrets.py
-99*.jpg
-5*.jpg
 old/
 page*.png
 *.pdf
+*jpg
+*.zip

@@ -145,6 +145,11 @@ ALLOWED_HOSTS = [
 
 TOOL_IMAGE_FOLDER = "img/tool_icons"
 
+MEDIA_URL = 'media/'
+
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
@@ -153,3 +158,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

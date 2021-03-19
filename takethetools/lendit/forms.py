@@ -1,7 +1,10 @@
-from django import forms
-from .models import Purpose, Category, Tool
 from bootstrap_datepicker_plus import DatePickerInput
-from django.contrib.auth import get_user_model
+
+from django import forms
+from django.core.exceptions import ValidationError
+
+from .models import Purpose, Tool, CustomImage
+
 
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(max_length=100)
@@ -30,21 +33,75 @@ class CheckinForm(forms.Form):
     returned_by = forms.CharField(label="ChipID")
 
 
-class ToolRegistrationForm(forms.Form):
-    id = forms.IntegerField(label="Barcode", max_value=9999999999999, required=False)
-    name = forms.CharField(label="Bezeichnung", max_length=30)
-    model = forms.CharField(label="Modellnummer", max_length=30, required=False)
-    brand = forms.CharField(label="Marke", max_length=30, required=False)
-    price = forms.IntegerField(label="Preis", required = False)
-    description = forms.CharField(label="Beschreibung", max_length=200, required=False)
-    owner = forms.ModelChoiceField(label="Eigentümerin", queryset=get_user_model().objects.all())
-    available_amount = forms.IntegerField(label="Verfügbare Menge")
-    sec_class = forms.IntegerField(label="Sicherheitsklasse")
-    trust_class = forms.IntegerField(label="Vertrauensklasse")
-    buy_date = forms.DateField(label="Gakauft am",input_formats=['%d/%m/%Y'],
-                                   widget=DatePickerInput(format='%d/%m/%Y'))
-    category = forms.ModelChoiceField(label="Kategorie", queryset=Category.objects.all())
-    image_link = forms.URLField(label="Bild URL", max_length=300,required=False)
+class ToolRegistrationForm(forms.ModelForm):
+    """
+    This form is used to register new tools. If everything else is clean,
+    image from the image-url (if any) is downloaded and saved. If any error
+    occurs during this step, a ValidationError is raised.
+    """
+    link = forms.URLField(label="Bild URL", required=False)
+
+    class Meta:
+        model = Tool
+        fields = (
+            'name',
+            'model',
+            'brand',
+            'price',
+            'description',
+            'owner',
+            'available_amount',
+            'sec_class',
+            'trust_class',
+            'buy_date',
+            'category',
+            'barcode_ean13_no_check_bit',
+            'img'
+        )
+        widgets = {
+            'buy_date': DatePickerInput(format='%Y-%m-%d')
+        }
+        labels = {
+            'name': 'Bezeichnung',
+            'model': 'Modellnummer',
+            'brand': 'Marke',
+            'price': 'Kaufpreis',
+            'description': 'Kommentar',
+            'owner': 'Eigentümerin',
+            'available_amount': 'Verfügbare Menge',
+            'sec_class': 'Sicherheitsklasse',
+            'trust_class': 'Vertrauensklasse',
+            'buy_date': 'Kaufdatum',
+            'category': 'Kategorie',
+            'barcode_ean13_no_check_bit': 'Barcode',
+
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        image_link = cleaned_data.get('link')
+        if image_link not in ("", None):
+            print(image_link)
+
+            im = CustomImage()
+            im.supplied_source = cleaned_data.get('link')
+            f_name = cleaned_data.get('name') + '_' + \
+                     cleaned_data.get('brand') + '_' + \
+                     cleaned_data.get('model') + '_' + \
+                     cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
+
+            if not im.save(cleaned_data.get('link'), f_name):
+                raise ValidationError('Image from given Link not downloadable or not an Image.')
+
+            cleaned_data['img'] = im
+        else:
+            try:
+                cleaned_data['img'] = CustomImage.objects.get(default=True) # unsafe, there could be multiple
+            except:
+                raise ValidationError('No default image exists, either mark one as default or add a picture URL')
+
+
+
 
 class ExportSelectionForm(forms.Form):
     def __init__(self):

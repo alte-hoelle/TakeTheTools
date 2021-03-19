@@ -1,4 +1,3 @@
-import os
 import string
 import random
 
@@ -10,10 +9,11 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
 
-from lendit.barcode_gen import Sheet, download_scale_toolicon
-from lendit.forms import (
+from .forms import (
     ExportSelectionForm,
     CheckoutForm,
     CheckinForm,
@@ -22,9 +22,9 @@ from lendit.forms import (
     ToolRegistrationForm,
     UserRegistrationFormChip,
 )
-from lendit.models import Tool, Lendlog, Purpose, Category
-from lendit.tables import ToolTable, UserTable
-
+from .models import Tool, Lendlog, Purpose, CustomUser
+from .tables import ToolTable, UserTable
+from .barcode_gen import Sheet
 
 class ToolList(SingleTableView):
     template_name = "tool_list.html"
@@ -40,10 +40,18 @@ class UserList(SingleTableView):
         User = get_user_model()
         return User.objects.all()
 
+
 class Home(TemplateView):
     template_name = "home.html"
 
-    
+
+class ToolCreate(CreateView):
+    model = Tool
+    form_class = ToolRegistrationForm
+    success_url = reverse_lazy('tools')
+    template_name = 'tool_reg.html'
+
+
 def Overview(request):
     active = Lendlog.objects.filter(status=1)
     inactive = Lendlog.objects.filter(status=0)
@@ -113,52 +121,6 @@ def addUser(request):
         return redirect("index")
 
 
-def registerTool(request):
-    context = {"form": ToolRegistrationForm}
-    return render(request, "tool_reg.html", context)
-
-
-def addTool(request):
-    form = ToolRegistrationForm(request.POST)
-
-    if form.is_valid():
-
-        user = get_user_model()
-        sub_owner = user.objects.get(username = form.cleaned_data["owner"])
-        if form.cleaned_data["id"] in("", None):
-            toolid = '99'+str(random.randint(1000000000,9999999999))
-
-        else:
-            toolid = form.cleaned_data["id"]
-
-        if not form.cleaned_data["image_link"]:
-            name = "default.png"
-        else:
-            ok, name = download_scale_toolicon(toolid, form.cleaned_data["image_link"])
-            if not ok:
-                messages.error(request, "Image is not valid: " + str(name))
-                return redirect("register_tool")
-
-        toolregister = Tool(
-            name=form.cleaned_data["name"],
-            brand=form.cleaned_data["brand"],
-            price=form.cleaned_data["price"],
-            description=form.cleaned_data["description"],
-            owner=sub_owner,
-            available_amount=form.cleaned_data["available_amount"],
-            sec_class=form.cleaned_data["sec_class"],
-            trust_class=form.cleaned_data["trust_class"],
-            img_local_link=os.path.join(settings.TOOL_IMAGE_FOLDER, name),
-            buy_date=form.cleaned_data["buy_date"],
-            category=Category.objects.get(name=form.cleaned_data["category"]),
-            model=form.cleaned_data["model"],
-            barcode_ean13_no_check_bit=toolid,
-            used_img_urls=form.cleaned_data["image_link"],
-        )
-
-        toolregister.save()
-        return redirect("tools")
-
 
 def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
 
@@ -198,15 +160,17 @@ def Checkout(request):
         return redirect("cart")
 
     if "lend" in request.POST:
+        #print(form.cleaned_data["lendby"])
         if form.is_valid():
 
             idlist = ids.split(",")
             for id in idlist:
-                ok, msg = lendTool(barcode=id,
-                         purpose=form.cleaned_data["purpose"],
-                         end=form.cleaned_data["expected_end"],
-                         lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT))
-
+                ok, msg = lendTool(
+                        barcode=id,
+                        purpose=form.cleaned_data["purpose"],
+                        end=form.cleaned_data["expected_end"],
+                        lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT)
+                )
 
                 if not ok:
                     messages.error(request, msg)
@@ -309,7 +273,7 @@ def Cart(request):
                         temp_tool.model,
                         temp_tool.description,
                         temp_tool.owner.username,
-                        temp_tool.img_local_link,
+                        temp_tool.img.image,
                     ]
                     i += 1
 
