@@ -86,28 +86,3 @@ def fix_ids_to_EAN13():
             #print(str(tool), prev, "-->", tool.id)
             #tool.save()
             #print(tool.id)
-
-def download_scale_toolicon(toolid, link):
-
-    path = os.path.abspath(os.path.dirname(__file__))
-    path = path.split("/")
-
-    path.pop(-1)
-    path_new = '/'.join([str(item) for item in path])
-
-    try:
-        image_filename = wget.download(link)
-    except Exception as e:
-
-        return False, str(e)
-
-    name = str(toolid) + ".jpg"
-    im = Image.open(image_filename)
-    im.thumbnail((60, 60), Image.ANTIALIAS)
-
-    os.system("rm " + image_filename)
-    impath = os.path.join(path_new, "static", "img", "tool_icons", name)
-
-    im.save(impath, "JPEG")
-
-    return True, name
