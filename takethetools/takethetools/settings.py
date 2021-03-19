@@ -159,8 +159,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-#{% load static %}
-#<img src="{% static "images/hi.jpg" %}" alt="Hi!" />
-
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

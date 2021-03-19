@@ -3,12 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
 from PIL import Image
-from io import StringIO
-from django.core.files.base import ContentFile
-from django.core.files import File
-import urllib3
-import requests # to get image from the web
-import shutil # to save it locally
+import requests
 
 from .utils import gen_random_ean13_no_checkbit
 
@@ -37,40 +32,44 @@ class CustomImage(models.Model):
     image = models.ImageField(upload_to='icons')
     supplied_source = models.URLField(default="", blank=True)
     description = models.CharField(max_length=100, default="", blank=True)
+    default = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.image)
 
     def save(self, path='',filename="", *args, **kwargs):
-        if "http" in path:
+        if path in (None, "") and filename in (None, ""):
+            super(CustomImage, self).save(*args, **kwargs)
+        else:
+            if "http" in path:
 
-            r = requests.get(path, stream=True)
-            if r.status_code == 200:
+                r = requests.get(path, stream=True)
+                if r.status_code == 200:
 
-                r.raw.decode_content = True
-                im = Image.open(r.raw)
-                im.thumbnail((60, 60), Image.ANTIALIAS)
-                im.save("media/icons/" + filename)
+                    r.raw.decode_content = True
+                    im = Image.open(r.raw)
+                    im.thumbnail((60, 60), Image.ANTIALIAS)
+                    im.save("media/icons/" + filename)
+
+                else:
+                    return False
 
             else:
                 return False
+                # Implement local picture uploading
+                #try:
+                #    pilimage = Image.open(path)
+                #except:
+                #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
 
-        else:
-            return False
-            # Implement local picture uploading
-            #try:
-            #    pilimage = Image.open(path)
-            #except:
-            #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+            try:
+                self.image = "icons/" + filename
 
-        try:
-            self.image = "icons/" + filename
+            except Exception as e:
+                return False
+            super(CustomImage, self).save(*args, **kwargs)
 
-        except Exception as e:
-            return False
-        super(CustomImage, self).save(*args, **kwargs)
-
-        return True
+            return True
 
 
 class Tool(models.Model):
@@ -90,15 +89,13 @@ class Tool(models.Model):
     sec_class = models.IntegerField()
     trust_class = models.IntegerField()
     buy_date = models.DateField(default=timezone.now, null=True, blank=True)
-    img_local_link = models.CharField(max_length=120, default="", blank=True, null=True)
     img = models.ForeignKey(
         CustomImage,
-        default=None,#CustomImage.objects.get(description="Default"),
+        default=None,
         on_delete=models.SET_NULL,
         blank=True,
         null=True
     )
-    used_img_urls = models.URLField(default="", blank=True)
     barcode_ean13_no_check_bit = models.CharField(
         unique=True, max_length=12, default=gen_random_ean13_no_checkbit
     )

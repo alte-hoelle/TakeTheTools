@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Purpose, Tool, CustomImage
-
+from .utils import get_default_img
 
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(max_length=100)
@@ -39,7 +39,7 @@ class ToolRegistrationForm(forms.ModelForm):
     image from the image-url (if any) is downloaded and saved. If any error
     occurs during this step, a ValidationError is raised.
     """
-    link = forms.URLField(label="Bild URL")
+    link = forms.URLField(label="Bild URL", required=False)
 
     class Meta:
         model = Tool
@@ -80,26 +80,27 @@ class ToolRegistrationForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         image_link = cleaned_data.get('link')
-        #tool_id = cleaned_data.get('barcode_ean13_no_check_bit')
-        im = CustomImage()
-        im.supplied_source = cleaned_data.get('link')
-        f_name = cleaned_data.get('name') + '_' + \
-                 cleaned_data.get('brand') + '_' + \
-                 cleaned_data.get('model') + '_' + \
-                 cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
+        if image_link not in ("", None):
+            print(image_link)
 
-        if not im.save(cleaned_data.get('link'), f_name):
-            raise ValidationError('Image from given Link not downloadable or not an Image.')
+            im = CustomImage()
+            im.supplied_source = cleaned_data.get('link')
+            f_name = cleaned_data.get('name') + '_' + \
+                     cleaned_data.get('brand') + '_' + \
+                     cleaned_data.get('model') + '_' + \
+                     cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
 
-        cleaned_data['img'] = im
-        if not image_link:
-            cleaned_data['image_path'] = 'default.png'
-            return cleaned_data
+            if not im.save(cleaned_data.get('link'), f_name):
+                raise ValidationError('Image from given Link not downloadable or not an Image.')
+
+            cleaned_data['img'] = im
         else:
-            pass
-            #ok, name = download_scale_toolicon(tool_id, image_link)
-            ##if not ok:
-            #    raise ValidationError('Image from given Link not downloadable or not an Image.')
+            try:
+                cleaned_data['img'] = CustomImage.objects.get(default=True) # unsafe, there could be multiple
+            except:
+                raise ValidationError('No default image exists, either mark one as default or add a picture URL')
+
+
 
 
 class ExportSelectionForm(forms.Form):
