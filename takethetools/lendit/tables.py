@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from lendit.models import Tool
+from .models import Tool
 
 ATTRS = {"class": "table table-responsive table-striped"}
 
