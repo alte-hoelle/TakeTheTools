@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Purpose, Tool, CustomImage
-from .utils import get_default_img
+
 
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(max_length=100)
