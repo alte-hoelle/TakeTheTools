@@ -60,8 +60,21 @@ class ToolRegistrationForm(forms.ModelForm):
         widgets = {
             'buy_date': DatePickerInput(format='%Y-%m-%d')
         }
-        labels = Toollabels.labels
+        labels = {
+            'name': 'Bezeichnung',
+            'model': 'Modellnummer',
+            'brand': 'Marke',
+            'price': 'Kaufpreis',
+            'description': 'Kommentar',
+            'owner': 'Eigentümerin',
+            'available_amount': 'Verfügbare Menge',
+            'sec_class': 'Sicherheitsklasse',
+            'trust_class': 'Vertrauensklasse',
+            'buy_date': 'Kaufdatum',
+            'category': 'Kategorie',
+            'barcode_ean13_no_check_bit': 'Barcode',
 
+        }
 
     def clean(self):
         cleaned_data = super().clean()
