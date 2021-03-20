@@ -314,16 +314,16 @@ def exportBarcodesPDF(request):
     export_sheet.export()
     return redirect("export")
 
-def test_view(request, pk='999999999999'):
-    print(pk)
-    if Tool.objects.filter(barcode_ean13_no_check_bit=pk).exists():
+def test_view(request, barcode_ean13_no_check_bit='999999999999'):
+
+    if Tool.objects.filter(barcode_ean13_no_check_bit=barcode_ean13_no_check_bit).exists():
 
         if request.session["cart"]:
             old = request.session["cart"]
-            request.session["cart"] = old + "," + pk
+            request.session["cart"] = old + "," + barcode_ean13_no_check_bit
         else:
-            request.session["cart"] = pk
+            request.session["cart"] = barcode_ean13_no_check_bit
 
     else:
         messages.error(request, "Kein valider Barcode")
-    return redirect("cart")
+    return redirect("tools")

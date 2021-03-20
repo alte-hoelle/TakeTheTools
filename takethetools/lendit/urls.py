@@ -32,8 +32,6 @@ urlpatterns = [
     path("add_to_cart/", addToCart, name="add_to_cart"),
     path("clearbasket/", clearbasket, name="clearbasket"),
     path("checkout/", Checkout, name="checkout"),
-    #path('add/<str:barcode_ean13_no_check_bit>/',lelview,'ald'),
-    #url(r'^(?P<username>[\.\w]+)/edit/$', test_view, 'test_view')
-    path('<str:pk>/add/', test_view, name='test_view'),
+    path('<str:barcode_ean13_no_check_bit>/add/', test_view, name='test_view'),
 ]
 

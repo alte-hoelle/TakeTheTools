@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 
 from .models import Purpose, Tool, CustomImage
 
-
 class UserRegistrationForm(forms.Form):
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput, max_length=100)
@@ -61,21 +60,8 @@ class ToolRegistrationForm(forms.ModelForm):
         widgets = {
             'buy_date': DatePickerInput(format='%Y-%m-%d')
         }
-        labels = {
-            'name': 'Bezeichnung',
-            'model': 'Modellnummer',
-            'brand': 'Marke',
-            'price': 'Kaufpreis',
-            'description': 'Kommentar',
-            'owner': 'Eigentümerin',
-            'available_amount': 'Verfügbare Menge',
-            'sec_class': 'Sicherheitsklasse',
-            'trust_class': 'Vertrauensklasse',
-            'buy_date': 'Kaufdatum',
-            'category': 'Kategorie',
-            'barcode_ean13_no_check_bit': 'Barcode',
+        labels = Toollabels.labels
 
-        }
 
     def clean(self):
         cleaned_data = super().clean()
