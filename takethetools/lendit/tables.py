@@ -13,6 +13,9 @@ class LenditTable(tables.Table):
 class ToolTable(tables.Table):
 
     image = tables.TemplateColumn('<img src="/media/{{record.img}}" style="width:60px;"> ')
+    my_column = tables.TemplateColumn(verbose_name=('Auswählen'),
+                                      template_name='tool_table_button.html',
+                                      orderable=False)  # orderable not sortable
 
     class Meta:
         model = Tool
@@ -20,6 +23,7 @@ class ToolTable(tables.Table):
             "barcode_ean13_no_check_bit",
             "name",
             "brand",
+            "model",
             "owner",
             "sec_class",
             "description",

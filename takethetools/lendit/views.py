@@ -2,7 +2,7 @@ import string
 import random
 
 from datetime import datetime
-from django_tables2 import SingleTableView
+from django_tables2 import SingleTableView, SingleTableMixin
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
+from django_filters.views import FilterView
 
 from .forms import (
     ExportSelectionForm,
@@ -24,12 +25,16 @@ from .forms import (
 )
 from .models import Tool, Lendlog, Purpose, CustomUser
 from .tables import ToolTable, UserTable
+from .filters import ToolFilter
 from .barcode_gen import Sheet
 
-class ToolList(SingleTableView):
+class ToolList(SingleTableMixin, FilterView):
     template_name = "tool_list.html"
+    model = Tool
     queryset = Tool.objects.all()
     table_class = ToolTable
+
+    filterset_class = ToolFilter
 
 
 class UserList(SingleTableView):
@@ -308,3 +313,17 @@ def exportBarcodesPDF(request):
     export_sheet.list()
     export_sheet.export()
     return redirect("export")
+
+def test_view(request, barcode_ean13_no_check_bit='999999999999'):
+
+    if Tool.objects.filter(barcode_ean13_no_check_bit=barcode_ean13_no_check_bit).exists():
+
+        if request.session["cart"]:
+            old = request.session["cart"]
+            request.session["cart"] = old + "," + barcode_ean13_no_check_bit
+        else:
+            request.session["cart"] = barcode_ean13_no_check_bit
+
+    else:
+        messages.error(request, "Kein valider Barcode")
+    return redirect("tools")
