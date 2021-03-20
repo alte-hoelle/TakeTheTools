@@ -313,3 +313,17 @@ def exportBarcodesPDF(request):
     export_sheet.list()
     export_sheet.export()
     return redirect("export")
+
+def test_view(request, pk='999999999999'):
+    print(pk)
+    if Tool.objects.filter(barcode_ean13_no_check_bit=pk).exists():
+
+        if request.session["cart"]:
+            old = request.session["cart"]
+            request.session["cart"] = old + "," + pk
+        else:
+            request.session["cart"] = pk
+
+    else:
+        messages.error(request, "Kein valider Barcode")
+    return redirect("cart")

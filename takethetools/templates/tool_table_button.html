@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <form action="{% url 'test_view' record.barcode_ean13_no_check_bit %}" method ="post">
+    {% csrf_token %}
+
+    <input class="btn btn-primary" type="submit" name="lend" value="+" />
+    </form>
+
+
+</body>
+</html>

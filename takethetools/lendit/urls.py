@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import include, url
 from .views import (
     addToCart,
     addUser,
@@ -13,6 +14,7 @@ from .views import (
     ToolCreate,
     ToolList,
     UserList,
+    test_view
 )
 
 urlpatterns = [
@@ -30,4 +32,8 @@ urlpatterns = [
     path("add_to_cart/", addToCart, name="add_to_cart"),
     path("clearbasket/", clearbasket, name="clearbasket"),
     path("checkout/", Checkout, name="checkout"),
+    #path('add/<str:barcode_ean13_no_check_bit>/',lelview,'ald'),
+    #url(r'^(?P<username>[\.\w]+)/edit/$', test_view, 'test_view')
+    path('<str:pk>/add/', test_view, name='test_view'),
 ]
+

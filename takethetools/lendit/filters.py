@@ -7,14 +7,6 @@ class LenditFilter(filters.Filter):
     pass
 
 class ToolFilter(filters.FilterSet):
-    '''
-    name = filters.ModelChoiceFilter(
-        field_name='name', lookup_expr='isnull',
-        null_label='Uncategorized',
-        queryset=Tool.objects.all(),
-    )
-    '''
-
 
     class Meta:
         model = Tool

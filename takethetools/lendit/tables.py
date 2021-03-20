@@ -10,13 +10,20 @@ class LenditTable(tables.Table):
         attrs = ATTRS
 
 
+
+
 class ToolTable(LenditTable):
+    my_column = tables.TemplateColumn(verbose_name=('Auswählen'),
+                                      template_name='tool_table_button.html',
+                                      orderable=False)  # orderable not sortable
+
     class Meta:
         model = Tool
         fields = (
             "barcode_ean13_no_check_bit",
             "name",
             "brand",
+            "model",
             "owner",
             "sec_class",
             "description",
