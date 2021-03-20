@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django.utils.html import format_html
 
 from .models import Tool
 
@@ -9,10 +10,9 @@ class LenditTable(tables.Table):
     class Meta:
         attrs = ATTRS
 
+class ToolTable(tables.Table):
 
-
-
-class ToolTable(LenditTable):
+    image = tables.TemplateColumn('<img src="/media/{{record.img}}" style="width:60px;"> ')
     my_column = tables.TemplateColumn(verbose_name=('Auswählen'),
                                       template_name='tool_table_button.html',
                                       orderable=False)  # orderable not sortable
@@ -28,7 +28,6 @@ class ToolTable(LenditTable):
             "sec_class",
             "description",
         )
-
 
 class UserTable(LenditTable):
     # We cannot use the definition via Meta here,
