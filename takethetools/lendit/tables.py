@@ -1,6 +1,7 @@
 import django_tables2 as tables
+from django.utils.html import format_html
 
-from lendit.models import Tool
+from .models import Tool
 
 ATTRS = {"class": "table table-responsive table-striped"}
 
@@ -9,8 +10,10 @@ class LenditTable(tables.Table):
     class Meta:
         attrs = ATTRS
 
+class ToolTable(tables.Table):
 
-class ToolTable(LenditTable):
+    image = tables.TemplateColumn('<img src="/media/{{record.img}}" style="width:60px;"> ')
+
     class Meta:
         model = Tool
         fields = (
@@ -21,7 +24,6 @@ class ToolTable(LenditTable):
             "sec_class",
             "description",
         )
-
 
 class UserTable(LenditTable):
     # We cannot use the definition via Meta here,
