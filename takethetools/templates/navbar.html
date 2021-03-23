@@ -1,38 +1,49 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     {% load static %}
-    <a class="navbar-brand" href="#">
-        <img src="{%static 'img/logo.png' %}" width="40" height="40" alt="">
+    <a class="navbar-brand" href="{% url 'home' %}">
+        <div class="d-flex">
+            <img src="{%static 'img/logo.png' %}" width="40" height="40" alt="" class="mr-3">
+            <h2>TakeTheToolz</h2>
+        </div>
+
     </a>
-    <h2>TakeTheToolz</h2>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'home' %}">Startseite</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'home' %}">Startseite</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cart' %}">Werkzeuge auswählen</a>
+                <a class="nav-link" href="{% url 'cart' %}">Werkzeuge auswählen</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'overview' %}">Verleihübersicht</a>
+                <a class="nav-link" href="{% url 'overview' %}">Verleihübersicht</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tools' %}">Werkzeugübersicht</a>
+                <a class="nav-link" href="{% url 'tools' %}">Werkzeugübersicht</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users' %}">Benutzerinnenübersicht</a>
+                <a class="nav-link" href="{% url 'users' %}">Benutzerinnenübersicht</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register_user' %}">Neue Benutzerin registrieren</a>
+                <a class="nav-link" href="{% url 'register_user' %}">Neue Benutzerin registrieren</a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tool_create' %}">Werkzeug hinzufügen</a>
+                <a class="nav-link" href="{% url 'tool_create' %}">Werkzeug hinzufügen</a>
             </li>
 
             <li class="nav-item">
-                    <a class="nav-link" href="{% url 'export' %}">Barcodes drucken</a>
+                <a class="nav-link" href="{% url 'export' %}">Barcodes drucken</a>
             </li>
-
         </ul>
-	</div>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Suche">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Suchen!</button>
+        </form>
+    </div>
 </nav>
-

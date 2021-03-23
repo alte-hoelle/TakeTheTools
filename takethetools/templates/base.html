@@ -5,6 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{%block title%} {%endblock%}</title>
 
     {% load bootstrap4 %}
@@ -13,11 +14,10 @@
     {%include 'navbar.html' %}
 </head>
 <body>
-
 {% include 'messages.html'%}
-
+<div class="container">
 {% block body %} {% endblock %}
-
+</div>
     <script>
         setTimeout(function(){
             if ($('#msg').length > 0) {
@@ -29,4 +29,4 @@
 </body>
 </html>
 
-<link rel="stylesheet" type="text/css" href="{%static 'css/bootstrap.min.css' %}"/>
+<!--<link rel="stylesheet" type="text/css" href="{%static 'css/bootstrap.min.css' %}"/>-->
