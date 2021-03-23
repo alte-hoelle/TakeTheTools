@@ -3,78 +3,75 @@
 {% block body %}
 
 {% load crispy_forms_tags %}
-<div class="container">
-    <h1> Neues Werkzeug hinzufügen </h1>
+<h1> Neues Werkzeug hinzufügen </h1>
 
-    <form action="{% url 'tool_create' %}" method ="post">
+<form action="{% url 'tool_create' %}" method ="post">
 
-        <div class="p-3 border bg-light">
-        {% csrf_token %}
+    <div class="p-3 border bg-light">
+    {% csrf_token %}
 
-        {% if form.non_field_errors %}
-            <div class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Fehler!</strong>{{ form.non_field_errors }}
-            </div>
-        {% endif %}
-
-        <div class="form-row">
-          <div class="form-group col-md-3 mb-0">
-            {{ form.name|as_crispy_field }}
-          </div>
-          <div class="form-group col-md-2 mb-0">
-            {{ form.brand|as_crispy_field }}
-          </div>
-
-            <div class="form-group col-md-2 mb-0">
-            {{ form.model|as_crispy_field }}
-          </div>
-            <div class="form-group col-md-1 mb-0">
-            {{ form.price|as_crispy_field }}
-          </div>
-            <div class="form-group col-md-4 mb-0">
-                 {{ form.media }}
-            {{ form.buy_date |as_crispy_field}}
-                 {{ form.widgets }}
-          </div>
+    {% if form.non_field_errors %}
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Fehler!</strong>{{ form.non_field_errors }}
         </div>
-        <div class="form-row">
-        <div class="form-group col-md-3 mb-0">
+    {% endif %}
 
-            {{ form.available_amount|as_crispy_field }}
-          </div>
-          <div class="form-group col-md-9 mb-0">
-            {{ form.description|as_crispy_field }}
-          </div>
-        </div>
+    <div class="form-row">
+      <div class="form-group col-md-3 mb-0">
+        {{ form.name|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-2 mb-0">
+        {{ form.brand|as_crispy_field }}
+      </div>
 
-        <div class="form-row">
-          <div class="form-group col-md-2 mb-0">
-            {{ form.sec_class|as_crispy_field }}
-          </div>
-            <div class="form-group col-md-2 mb-0">
-            {{ form.trust_class|as_crispy_field }}
-          </div>
-          <div class="form-group col-md-8 mb-0">
-            {{ form.link|as_crispy_field }}
-          </div>
-        </div>
+        <div class="form-group col-md-2 mb-0">
+        {{ form.model|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-1 mb-0">
+        {{ form.price|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-4 mb-0">
+             {{ form.media }}
+        {{ form.buy_date |as_crispy_field}}
+             {{ form.widgets }}
+      </div>
+    </div>
+    <div class="form-row">
+    <div class="form-group col-md-3 mb-0">
 
-        <div class="form-row">
-          <div class="form-group col-md-4 mb-0">
-            {{ form.owner|as_crispy_field }}
-          </div>
-            <div class="form-group col-md-4 mb-0">
-            {{ form.category|as_crispy_field }}
-          </div>
-          <div class="form-group col-md-4 mb-0">
-            {{ form.barcode_ean13_no_check_bit|as_crispy_field }}
-          </div>
-        </div>
+        {{ form.available_amount|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-9 mb-0">
+        {{ form.description|as_crispy_field }}
+      </div>
+    </div>
 
-        <input type="submit" value="Registrieren", class="btn btn-success">
-        </div>
-    </form>
+    <div class="form-row">
+      <div class="form-group col-md-2 mb-0">
+        {{ form.sec_class|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+        {{ form.trust_class|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-8 mb-0">
+        {{ form.link|as_crispy_field }}
+      </div>
+    </div>
 
-</div>
+    <div class="form-row">
+      <div class="form-group col-md-4 mb-0">
+        {{ form.owner|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-4 mb-0">
+        {{ form.category|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-4 mb-0">
+        {{ form.barcode_ean13_no_check_bit|as_crispy_field }}
+      </div>
+    </div>
+
+    <input type="submit" value="Registrieren", class="btn btn-success">
+    </div>
+</form>
 {% endblock %}

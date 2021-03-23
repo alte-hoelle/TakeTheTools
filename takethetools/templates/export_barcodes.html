@@ -8,17 +8,14 @@ Barcodes exportieren
 
 {% load crispy_forms_tags %}
 
-<div class="container px-1">
-    <div class="p-3 border bg-light">
+<div class="p-3 border bg-light">
 
-        <form action="{% url 'add_pdf' %}" method ="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input class="btn btn-success" type="submit" value="Hinzufügen"/>
+    <form action="{% url 'add_pdf' %}" method ="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-success" type="submit" value="Hinzufügen"/>
 
-        </form>
-    </div>
-
+    </form>
 </div>
 
 {% endblock %}
