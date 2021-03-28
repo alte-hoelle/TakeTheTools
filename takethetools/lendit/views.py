@@ -198,7 +198,7 @@ def Checkout(request):
             idlist = ids.split(",")
             return_cnt = 0
             for lend in lends_by_id:
-                if str(lend.tool.id) in idlist:
+                if str(lend.tool.barcode_ean13_no_check_bit) in idlist:
                     lend.returned_by = returner
                     lend.end_date = datetime.today()
                     lend.status = 0
