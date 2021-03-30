@@ -7,7 +7,6 @@ import requests
 
 from .utils import gen_random_ean13_no_checkbit
 
-
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     chip_id = models.CharField(max_length=512)

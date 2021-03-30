@@ -28,12 +28,12 @@ from .tables import ToolTable, UserTable
 from .filters import ToolFilter
 from .barcode_gen import Sheet
 
+
 class ToolList(SingleTableMixin, FilterView):
     template_name = "tool_list.html"
     model = Tool
     queryset = Tool.objects.all()
     table_class = ToolTable
-
     filterset_class = ToolFilter
 
 
@@ -326,4 +326,6 @@ def test_view(request, barcode_ean13_no_check_bit='999999999999'):
 
     else:
         messages.error(request, "Kein valider Barcode")
-    return redirect("tools")
+
+    return redirect(request.META['HTTP_REFERER'])
+
