@@ -28,12 +28,12 @@ from .tables import ToolTable, UserTable
 from .filters import ToolFilter
 from .barcode_gen import Sheet
 
+
 class ToolList(SingleTableMixin, FilterView):
     template_name = "tool_list.html"
     model = Tool
     queryset = Tool.objects.all()
     table_class = ToolTable
-
     filterset_class = ToolFilter
 
 
@@ -198,7 +198,7 @@ def Checkout(request):
             idlist = ids.split(",")
             return_cnt = 0
             for lend in lends_by_id:
-                if str(lend.tool.id) in idlist:
+                if str(lend.tool.barcode_ean13_no_check_bit) in idlist:
                     lend.returned_by = returner
                     lend.end_date = datetime.today()
                     lend.status = 0
@@ -326,4 +326,6 @@ def test_view(request, barcode_ean13_no_check_bit='999999999999'):
 
     else:
         messages.error(request, "Kein valider Barcode")
-    return redirect("tools")
+
+    return redirect(request.META['HTTP_REFERER'])
+

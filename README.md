@@ -1,6 +1,6 @@
 
 # TakeTheTools
-A prototype for an easy to user tool and equipment lending tool for open workshops, collectives and fablabs
+A prototype for a digital equipment rental service for self-managed collectives, open workshops, shared warehouses and fablabs
 
 An often encountered problem in open workshops such as ours, is that many people visit us and want to borrow tools, especially during events.
 Handling that with sprawling excel sheets or even worse, paper was no longer an option. 
