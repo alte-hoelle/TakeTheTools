@@ -9,6 +9,18 @@ This works by first making inventory of all our stuff and afterwards sticking th
 with 125 kHz RFID chips. They can than scan all the tools they want to borrow and enter an expected return date. Afterwards they can checkout their cart with either
 their chip or a username/password combination.
 
+## Installation
+Clone the repo to a directory of your choice. Install [poetry](https://python-poetry.org/docs/) for installing dependencies. Afterwards issue the following commands within the repo-directory:
+```bash
+poetry install
+poetry shell
+cd takethetools
+python manage.py makemigrations lendit
+python manage.py migrate
+python manage.py runserver 8080
+```
+The server should be reachable via [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
+
 ## Interface
 ![leih](https://user-images.githubusercontent.com/1584749/111876908-10d3fb80-89a1-11eb-9ea3-ab28cf536c57.png)
 ![addtool](https://user-images.githubusercontent.com/1584749/111876911-129dbf00-89a1-11eb-98e0-adc3818c0dbb.png)

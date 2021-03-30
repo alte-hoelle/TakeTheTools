@@ -1,52 +1,50 @@
 {% extends 'base.html' %}
 {%block title%} Register a new user {%endblock%}
 {% block body %}
-<div class="container">
-    <h1> Neue Nutzerin registrieren</h1>
+<h1> Neue Nutzerin registrieren</h1>
 
-    <form action="{% url 'adduser' %}" method ="post">
-        <table class="table table-striped">
-        {% csrf_token %}
+<form action="{% url 'adduser' %}" method ="post">
+    <table class="table table-striped">
+    {% csrf_token %}
 
-                <tr>
-            <th> Nutzerin </th>
-            <th> Mail </th>
-            <th> Password </th>
-                    <th>  </th>
-        </tr>
-        <tr>
-           <th> {{ form.username }}</th>
-            <th> {{ form.email}}</th>
-            <th> {{ form.password}}</th>
-            <th> <input type="submit" value="Registrieren" class="btn btn-success"> </th>
-        </tr>
-            </table>
-
-    </form>
-    <h1> Userin über Chip registrieren </h1>
-    <form action="{% url 'adduser' %}" method ="post">
-        <table class="table table-striped">
-        {% csrf_token %}
-        <tr>
-            <th> Nutzerin </th>
-            <th> Mail </th>
-            <th> Chip ID </th>
-            <th> </th>
-        </tr>
-        <tr>
-           <th> {{ form_chip.username }}</th>
-            <th> {{ form_chip.email}}</th>
-            <th> {{ form_chip.chip_id }}</th>
-            <th> <input type="submit" value="Mit Chip registrieren", class="btn btn-success"></th>
-
-        </tr>
-
-
-
+            <tr>
+        <th> Nutzerin </th>
+        <th> Mail </th>
+        <th> Password </th>
+                <th>  </th>
+    </tr>
+    <tr>
+       <th> {{ form.username }}</th>
+        <th> {{ form.email}}</th>
+        <th> {{ form.password}}</th>
+        <th> <input type="submit" value="Registrieren" class="btn btn-success"> </th>
+    </tr>
         </table>
 
-    </form>
-    <h1> LDAP Account verbinden </h1>
-    Hallo Simon, na?
-</div>
+</form>
+<h1> Userin über Chip registrieren </h1>
+<form action="{% url 'adduser' %}" method ="post">
+    <table class="table table-striped">
+    {% csrf_token %}
+    <tr>
+        <th> Nutzerin </th>
+        <th> Mail </th>
+        <th> Chip ID </th>
+        <th> </th>
+    </tr>
+    <tr>
+       <th> {{ form_chip.username }}</th>
+        <th> {{ form_chip.email}}</th>
+        <th> {{ form_chip.chip_id }}</th>
+        <th> <input type="submit" value="Mit Chip registrieren", class="btn btn-success"></th>
+
+    </tr>
+
+
+
+    </table>
+
+</form>
+<h1> LDAP Account verbinden </h1>
+Hallo Simon, na?
 {% endblock %}
