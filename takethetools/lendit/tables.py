@@ -3,7 +3,7 @@ from django.utils.html import format_html
 
 from .models import Tool
 
-ATTRS = {"class": "table table-responsive table-striped"}
+ATTRS = {"class": "table table-responsive table-striped table-hover"}
 
 
 class LenditTable(tables.Table):
@@ -19,6 +19,7 @@ class ToolTable(tables.Table):
 
     class Meta:
         model = Tool
+        attrs = ATTRS
         fields = (
             "barcode_ean13_no_check_bit",
             "name",
