@@ -25,7 +25,6 @@ class ToolTable(tables.Table):
             "brand",
             "model",
             "owner",
-            "sec_class",
             "description",
         )
 
