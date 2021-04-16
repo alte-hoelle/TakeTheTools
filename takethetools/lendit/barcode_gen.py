@@ -14,6 +14,7 @@ class Sheet:
         pass
 
     def export(self):
+        os.system("rm -r pa*")
         os.system("mkdir barcodes")
         x_images = 0
         y_images = 0
