@@ -134,8 +134,6 @@ class ToolRegistrationForm(forms.ModelForm):
                 raise ValidationError('No default image exists, either mark one as default or add a picture URL')
 
 
-
-
 class ExportSelectionForm(forms.Form):
     def __init__(self):
         super().__init__()

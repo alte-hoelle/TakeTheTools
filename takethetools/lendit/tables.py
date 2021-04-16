@@ -10,10 +10,11 @@ class LenditTable(tables.Table):
     class Meta:
         attrs = ATTRS
 
+
 class ToolTable(tables.Table):
 
     image = tables.TemplateColumn('<img src="/media/{{record.img}}" style="width:60px;"> ')
-    my_column = tables.TemplateColumn(verbose_name=('Auswählen'),
+    my_column = tables.TemplateColumn(verbose_name='Auswählen',
                                       template_name='tool_table_button.html',
                                       orderable=False)  # orderable not sortable
 
@@ -21,13 +22,13 @@ class ToolTable(tables.Table):
         model = Tool
         attrs = ATTRS
         fields = (
-            "barcode_ean13_no_check_bit",
             "name",
             "brand",
             "model",
             "owner",
             "description",
         )
+
 
 class UserTable(LenditTable):
     # We cannot use the definition via Meta here,
