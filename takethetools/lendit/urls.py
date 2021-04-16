@@ -14,7 +14,10 @@ from .views import (
     ToolCreate,
     ToolList,
     UserList,
-    test_view
+    test_view,
+
+    logout_request,
+    login_request
 )
 
 urlpatterns = [
@@ -33,5 +36,7 @@ urlpatterns = [
     path("clearbasket/", clearbasket, name="clearbasket"),
     path("checkout/", Checkout, name="checkout"),
     path('<str:barcode_ean13_no_check_bit>/add/', test_view, name='test_view'),
+    path("logout/", logout_request, name="logout"),
+    path("login/", login_request, name="login"),
 ]
 

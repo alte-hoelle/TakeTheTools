@@ -14,6 +14,11 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django_filters.views import FilterView
 
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import (
     ExportSelectionForm,
     CheckoutForm,
@@ -29,7 +34,7 @@ from .filters import ToolFilter
 from .barcode_gen import Sheet
 
 
-class ToolList(SingleTableMixin, FilterView):
+class ToolList(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = "tool_list.html"
     model = Tool
     queryset = Tool.objects.all()
@@ -37,7 +42,7 @@ class ToolList(SingleTableMixin, FilterView):
     filterset_class = ToolFilter
 
 
-class UserList(SingleTableView):
+class UserList(LoginRequiredMixin, SingleTableView):
     template_name = "user_list.html"
     table_class = UserTable
 
@@ -50,13 +55,14 @@ class Home(TemplateView):
     template_name = "home.html"
 
 
-class ToolCreate(CreateView):
+class ToolCreate(LoginRequiredMixin, CreateView):
     model = Tool
     form_class = ToolRegistrationForm
     success_url = reverse_lazy('tools')
     template_name = 'tool_reg.html'
 
 
+@login_required
 def Overview(request):
     active = Lendlog.objects.filter(status=1)
     inactive = Lendlog.objects.filter(status=0)
@@ -65,11 +71,13 @@ def Overview(request):
     return render(request, "stats.html", context)
 
 
+@login_required
 def registerUser(request):
     context = {"form": UserRegistrationForm, "form_chip": UserRegistrationFormChip}
     return render(request, "user_reg.html", context)
 
 
+@login_required
 def addUser(request):
 
     form = UserRegistrationForm(request.POST)
@@ -126,7 +134,7 @@ def addUser(request):
         return redirect("index")
 
 
-
+@login_required
 def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
 
     current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
@@ -153,7 +161,7 @@ def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
     current_tool.save()
     return True, ""
 
-
+@login_required
 def Checkout(request):
 
     form = CheckoutForm(request.POST)
@@ -221,7 +229,7 @@ def Checkout(request):
         pass
     return redirect("cart")
 
-
+@login_required
 def addToCart(request):
 
     form = AddItemToCartIDForm(request.POST or None)
@@ -251,12 +259,12 @@ def addToCart(request):
         del request.session["cart"]
     return redirect("cart")
 
-
+@login_required
 def clearbasket(request):
     del request.session["cart"]
     return redirect("cart")
 
-
+@login_required
 def Cart(request):
 
     display_dict = {}
@@ -294,7 +302,7 @@ def Cart(request):
 
     return render(request, "cart.html", context)
 
-
+@login_required
 def exportBarcodes(request):
 
     context = {"form": ExportSelectionForm}
@@ -302,6 +310,7 @@ def exportBarcodes(request):
     return render(request, "export_barcodes.html", context)
 
 
+@login_required
 def exportBarcodesPDF(request):
 
     form = ExportSelectionForm()
@@ -314,6 +323,8 @@ def exportBarcodesPDF(request):
     export_sheet.export()
     return redirect("export")
 
+
+@login_required
 def test_view(request, barcode_ean13_no_check_bit='999999999999'):
 
     if Tool.objects.filter(barcode_ean13_no_check_bit=barcode_ean13_no_check_bit).exists():
@@ -329,3 +340,28 @@ def test_view(request, barcode_ean13_no_check_bit='999999999999'):
 
     return redirect(request.META['HTTP_REFERER'])
 
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Du hast dich erfolgreich ausgeloggt")
+    return redirect("login")
+
+
+def login_request(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}")
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    form = AuthenticationForm()
+    return render(request = request, template_name="login.html", context={"form":form})
