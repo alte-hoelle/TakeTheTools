@@ -101,18 +101,18 @@ class ToolRegistrationForm(forms.ModelForm):
                 raise ValidationError('No default image exists, either mark one as default or add a picture URL')
 
 
-
-
 class ExportSelectionForm(forms.Form):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         tools = Tool.objects.all()
         for tool in tools:
             self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
 
     def get_interest_fields(self):
         for field_name in self.fields:
-            print(self[field_name].value)
+            #print(self[field_name].value)
             yield self[field_name]
 
-
+        for i in range(4):
+            lol = self.cleaned_data[str(self.fields[i].name)]
+            print(i, ":" ,lol)

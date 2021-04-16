@@ -220,6 +220,7 @@ def Checkout(request):
 def addToCart(request):
 
     form = AddItemToCartIDForm(request.POST or None)
+    print(form.data)
 
     if "add" in request.POST:
         if form.is_valid():
@@ -299,11 +300,14 @@ def exportBarcodes(request):
 
 def exportBarcodesPDF(request):
 
-    form = ExportSelectionForm()
+    form = ExportSelectionForm(request.POST or None)
     export_sheet = Sheet()
 
-    for field in form.get_interest_fields():
-        export_sheet.add_tool(int(field.name))
+    if form.is_valid():
+        for a in form.cleaned_data:
+            if form.cleaned_data[a] > 0:
+                export_sheet.add_tool(int(a), form.cleaned_data[a])
+                print(int(a), form.cleaned_data[a])
 
     export_sheet.list()
     export_sheet.export()

@@ -4,7 +4,6 @@ from barcode.writer import ImageWriter
 from PIL import Image, ImageFont, ImageDraw
 import os
 import numpy as np
-import wget
 
 
 class Sheet:
@@ -65,15 +64,19 @@ class Sheet:
 
         os.system("rm -r barcodes")
 
-    def add_tool(self, barcode):
-        tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
-        for n in range(tool.available_amount):
-            self.barcodes.append([tool.barcode_ean13_no_check_bit, tool.name, tool.brand, tool.model, tool.owner.username])
+    def add_tool(self, barcode, number):
+        try:
+            tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
+        except Exception as e:
+            print(e, barcode)
+            return
+
+        self.barcodes.append([number, tool.barcode_ean13_no_check_bit, tool.name, tool.brand, tool.model, tool.owner.username])
 
     def list(self):
         for barcode in self.barcodes:
-            print(barcode)
-
+            #print(barcode)
+            pass
 
 def fix_ids_to_EAN13():
     tools = Tool.objects.all()
