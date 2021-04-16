@@ -25,7 +25,6 @@ class Sheet:
         spacer_vert_width = 80
         spacer_vert = Image.new('RGB', (spacer_vert_width, 250), (255, 255, 255))
         top_spacer = Image.new('RGB', (4*523 + 4*spacer_vert_width, 25), (255, 255, 255))
-        print("Number: ", len(self.barcodes))
         for tool in self.barcodes:
 
             with open("barcodes/" + str(tool[0]) + ".png", 'wb') as f:
