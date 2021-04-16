@@ -17,7 +17,8 @@ from django_filters.views import FilterView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 
 from .forms import (
     ExportSelectionForm,
@@ -34,7 +35,8 @@ from .filters import ToolFilter
 from .barcode_gen import Sheet
 
 
-class ToolList(LoginRequiredMixin, SingleTableMixin, FilterView):
+class ToolList(LoginRequiredMixin, PermissionRequiredMixin, SingleTableMixin, FilterView):
+    permission_required = "lendit.view_tool"
     template_name = "tool_list.html"
     model = Tool
     queryset = Tool.objects.all()
@@ -42,7 +44,8 @@ class ToolList(LoginRequiredMixin, SingleTableMixin, FilterView):
     filterset_class = ToolFilter
 
 
-class UserList(LoginRequiredMixin, SingleTableView):
+class UserList(LoginRequiredMixin, PermissionRequiredMixin, SingleTableView):
+    permission_required = 'lendit.view_customuser'
     template_name = "user_list.html"
     table_class = UserTable
 
@@ -55,7 +58,8 @@ class Home(TemplateView):
     template_name = "home.html"
 
 
-class ToolCreate(LoginRequiredMixin, CreateView):
+class ToolCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'lendit.add_tool'
     model = Tool
     form_class = ToolRegistrationForm
     success_url = reverse_lazy('tools')
@@ -64,6 +68,8 @@ class ToolCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def Overview(request):
+    #permission_required = 'lendit.view_lendlog'
+    # make this a CBV first
     active = Lendlog.objects.filter(status=1)
     inactive = Lendlog.objects.filter(status=0)
 
