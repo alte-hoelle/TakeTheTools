@@ -2,18 +2,52 @@ from bootstrap_datepicker_plus import DatePickerInput
 
 from django import forms
 from django.core.exceptions import ValidationError
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, Field, Fieldset
 
 from .models import Purpose, Tool, CustomImage
 
 class UserRegistrationForm(forms.Form):
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput, max_length=100)
-    email = forms.CharField(max_length=100)
+    username = forms.CharField(max_length=100,label='Nutzerin')
+    password = forms.CharField(widget=forms.PasswordInput, max_length=100,label='Password')
+    email = forms.CharField(max_length=100,label='Mail')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-row p-3 mt-4 mb-4 border bg-light form-inline'
+        self.helper.field_class = 'col-auto'
+
+        self.helper.layout = Layout(
+            Field('username', placeholder='Nutzerin'),
+            Field('password', placeholder='Password'),
+            Field('email', placeholder='Mail'),
+        )
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'adduser'
+        self.helper.form_show_labels = False
+        self.helper.add_input(Submit('submit', 'Registrieren'))
 
 class UserRegistrationFormChip(forms.Form):
-    username = forms.CharField(max_length=100)
-    email = forms.CharField(max_length=100)
-    chip_id = forms.CharField(max_length=10)
+    username = forms.CharField(max_length=100, label='Nutzerin')
+    email = forms.CharField(max_length=100, label='Mail')
+    chip_id = forms.CharField(max_length=10, label='Chip ID')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-row p-3 mt-4 mb-4 border bg-light form-inline'
+        self.helper.field_class = 'col-auto'
+
+        self.helper.layout = Layout(
+            Field('username', placeholder='Nutzerin'),
+            Field('email', placeholder='Mail'),
+            Field('chip_id', placeholder='Chip ID'),
+        )
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'adduser'
+        self.helper.form_show_labels = False
+        self.helper.add_input(Submit('submit', 'Mit Chip registrieren'))
 
 class AddItemToCartIDForm(forms.Form):
     item_id = forms.CharField(label=('Werkzeug-ID'),

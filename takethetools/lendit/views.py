@@ -66,7 +66,7 @@ def Overview(request):
 
 
 def registerUser(request):
-    context = {"form": UserRegistrationForm, "form_chip": UserRegistrationFormChip}
+    context = {"UserRegistrationForm": UserRegistrationForm, "UserRegistrationFormChip": UserRegistrationFormChip}
     return render(request, "user_reg.html", context)
 
 
