@@ -21,6 +21,12 @@ python manage.py runserver 8080
 ```
 The server should be reachable via [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
 
+## Setup
+
+If you want to start registering items, serveral steps have to be taken first. 
+Make sure you add a location for the items first. Than register a Terminal User which is situated at the aforementioned Location. When creating Items, the location of the registering terminal User will be taken as the default item location.
+Also, this may be changed, register one or multiple Owners for items you want to register in advance. This makes things easier in the process of adding items.
+
 ## Interface
 ![leih](https://user-images.githubusercontent.com/1584749/111876908-10d3fb80-89a1-11eb-9ea3-ab28cf536c57.png)
 ![addtool](https://user-images.githubusercontent.com/1584749/111876911-129dbf00-89a1-11eb-98e0-adc3818c0dbb.png)
