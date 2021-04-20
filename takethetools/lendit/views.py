@@ -307,8 +307,8 @@ def exportBarcodesPDF(request):
         for a in form.cleaned_data:
             if form.cleaned_data[a] > 0:
                 export_sheet.add_tool(int(a), form.cleaned_data[a])
-                print(int(a), form.cleaned_data[a])
 
     export_sheet.list()
     export_sheet.export()
+    del export_sheet
     return redirect("export")
