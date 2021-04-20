@@ -39,29 +39,34 @@ class Sheet:
             d_con.multiline_text((80, 165), tool[1] + " " + tool[2], font=fnt, fill=(0, 0, 0))
             d_con.multiline_text((80, 190), tool[3] + " / " + tool[4] + " GV", font=fnt, fill=(0, 0, 0))
             for i in range(tool[-1]):
+
                 if x_images == 0:
                     # if no images in x direction, start a new row
                     stichted_row = np.concatenate((spacer_vert, image), axis=1)
 
                     x_images += 1
-                elif x_images % 4 != 0:
+                elif x_images % 3 != 0:
                     # if row has not reached the limit 4 continue adding pictures
                     stichted_row = np.concatenate((stichted_row, spacer_vert, image), axis=1)
+
                     x_images += 1
-                elif x_images % 4 == 0 and x_images != 0:
+                elif x_images % 3 == 0 and x_images != 0:
+                    stichted_row = np.concatenate((stichted_row, spacer_vert, image), axis=1)
                     # if line end has been reached decide what to do
                     if y_images == 0:
                         # if no rows are currently present, make the current row the first row
                         stichted = stichted_row
                         y_images += 1
 
-                    elif y_images == 12:
+                    elif y_images == 11:
                         # if there are enough rows for a page, save the pdf and start new
+                        stichted = np.concatenate((stichted, stichted_row), axis=0)
                         final = np.concatenate((top_spacer, stichted), axis=0)
                         im = Image.fromarray(final)
                         im.save("pa" + str(pages) + ".pdf", "PDF")
                         y_images = 0
                         pages += 1
+
 
                     else:
                         stichted = np.concatenate((stichted, stichted_row), axis=0)
@@ -73,11 +78,12 @@ class Sheet:
                     # even if its not complete
 
                     # add the current row to the page content and fill missing pieces with whitespace
-                    whitespace_fill = Image.new('RGB', (stichted.shape[1] -
-                                                        stichted_row.shape[1], 250), (255, 255, 255))
+                    if stichted_row is not None:
+                        whitespace_fill = Image.new('RGB', (stichted.shape[1] -
+                                                            stichted_row.shape[1], 250), (255, 255, 255))
 
-                    stichted_row = np.concatenate((stichted_row, whitespace_fill), axis=1)
-                    stichted = np.concatenate((stichted, stichted_row), axis=0)
+                        stichted_row = np.concatenate((stichted_row, whitespace_fill), axis=1)
+                        stichted = np.concatenate((stichted, stichted_row), axis=0)
                     # add the current page content to the spacer
                     final = np.concatenate((top_spacer, stichted), axis=0)
                     im = Image.fromarray(final)
