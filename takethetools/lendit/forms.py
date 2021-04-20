@@ -28,6 +28,7 @@ class UserRegistrationForm(forms.Form):
         self.helper.form_show_labels = False
         self.helper.add_input(Submit('submit', 'Registrieren'))
 
+
 class UserRegistrationFormChip(forms.Form):
     username = forms.CharField(max_length=100, label='Nutzerin')
     email = forms.CharField(max_length=100, label='Mail')
@@ -49,18 +50,25 @@ class UserRegistrationFormChip(forms.Form):
         self.helper.form_show_labels = False
         self.helper.add_input(Submit('submit', 'Mit Chip registrieren'))
 
+
 class AddItemToCartIDForm(forms.Form):
-    item_id = forms.CharField(label=('Werkzeug-ID'),
-    strip=True,
-    widget=forms.TextInput(attrs={'placeholder': ('Werkzeug-ID'), 'class': 'form-control', 'autofocus': True})
-)
+    item_id = forms.CharField(label='Werkzeug-ID',
+                              strip=True,
+                              widget=forms.TextInput(attrs={
+                                                            'placeholder': 'Werkzeug-ID',
+                                                            'class': 'form-control',
+                                                            'autofocus': True
+                                                            })
+                              )
+
 
 class CheckoutForm(forms.Form):
-    expected_end = forms.DateField(label="Rückgabe am",input_formats=['%d/%m/%Y'],
+    expected_end = forms.DateField(label="Rückgabe am", input_formats=['%d/%m/%Y'],
                                    widget=DatePickerInput(format='%d/%m/%Y'))
 
     purpose = forms.ModelChoiceField(label="Zweck", queryset=Purpose.objects.all())
     lendby = forms.CharField(label="ChipID")
+
 
 class CheckinForm(forms.Form):
     returned_by = forms.CharField(label="ChipID")
@@ -114,14 +122,13 @@ class ToolRegistrationForm(forms.ModelForm):
         cleaned_data = super().clean()
         image_link = cleaned_data.get('link')
         if image_link not in ("", None):
-            print(image_link)
 
             im = CustomImage()
             im.supplied_source = cleaned_data.get('link')
             f_name = cleaned_data.get('name') + '_' + \
-                     cleaned_data.get('brand') + '_' + \
-                     cleaned_data.get('model') + '_' + \
-                     cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
+                cleaned_data.get('brand') + '_' + \
+                cleaned_data.get('model') + '_' + \
+                cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
 
             if not im.save(cleaned_data.get('link'), f_name):
                 raise ValidationError('Image from given Link not downloadable or not an Image.')
@@ -130,20 +137,13 @@ class ToolRegistrationForm(forms.ModelForm):
         else:
             try:
                 cleaned_data['img'] = CustomImage.objects.get(default=True) # unsafe, there could be multiple
-            except:
+            except Exception:
                 raise ValidationError('No default image exists, either mark one as default or add a picture URL')
 
 
 class ExportSelectionForm(forms.Form):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         tools = Tool.objects.all()
         for tool in tools:
             self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
-
-    def get_interest_fields(self):
-        for field_name in self.fields:
-            print(self[field_name].value)
-            yield self[field_name]
-
-
