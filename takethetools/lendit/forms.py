@@ -1,4 +1,5 @@
 from bootstrap_datepicker_plus import DatePickerInput
+from datetime import datetime
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -68,6 +69,12 @@ class CheckoutForm(forms.Form):
 
     purpose = forms.ModelChoiceField(label="Zweck", queryset=Purpose.objects.all())
     lendby = forms.CharField(label="ChipID")
+
+    def clean(self):
+        # this is not working as expected, no visible message is raised
+        cleaned_data = super().clean()
+        if cleaned_data["expected_end"] < datetime.today().date():
+            raise forms.ValidationError("Rückgabedatum vor Ausleihdatum")
 
 
 class CheckinForm(forms.Form):

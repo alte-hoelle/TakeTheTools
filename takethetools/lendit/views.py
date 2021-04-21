@@ -160,6 +160,7 @@ def Checkout(request):
 
     form = CheckoutForm(request.POST)
     form_in = CheckinForm(request.POST)
+    cart = AddItemToCartIDForm(request.POST)
 
     ids = request.session["cart"]
     if not ids:
@@ -168,6 +169,7 @@ def Checkout(request):
 
     if "lend" in request.POST:
         #print(form.cleaned_data["lendby"])
+
         if form.is_valid():
 
             idlist = ids.split(",")
@@ -185,6 +187,9 @@ def Checkout(request):
 
             clearbasket(request)
             messages.success(request, "Alles ausgeliehen!")
+        else:
+            messages.error(request, str(form.non_field_errors()))
+
 
     elif "return" in request.POST:
 
@@ -222,6 +227,7 @@ def Checkout(request):
                     str(return_cnt)
                     + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?",
                 )
+
     else:
         pass
     return redirect("cart")
