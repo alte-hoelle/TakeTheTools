@@ -135,6 +135,8 @@ def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
         user = CustomUser.objects.get(chip_id = lender)
     except Exception as e:
         return False, "User was not found"
+    if current_tool.present_amount <= 0:
+        return False, "Tool not present"
 
     newlog = Lendlog(
         tool=current_tool,
@@ -205,6 +207,9 @@ def Checkout(request):
                     idlist.remove(str(lend.tool.barcode_ean13_no_check_bit))
                     return_cnt += 1
                     lend.save()
+
+                    lend.tool.present_amount += 1
+                    lend.tool.save()
             if not idlist:
                 request.session["cart"] = ""
                 messages.success(

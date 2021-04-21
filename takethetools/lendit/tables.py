@@ -27,8 +27,9 @@ class ToolTable(tables.Table):
             "model",
             "owner",
             "description",
+            "present_amount"
         )
-        sequence = ('image', 'name', 'brand', 'model', 'owner', 'description', 'my_column')
+        sequence = ('image', 'name', 'brand', 'model', 'owner', 'description', 'present_amount', 'my_column')
 
 
 class UserTable(LenditTable):
