@@ -24,7 +24,7 @@ from .forms import (
     UserRegistrationFormChip,
 )
 from .models import Tool, Lendlog, Purpose, CustomUser
-from .tables import ToolTable, UserTable
+from .tables import ToolTable, UserTable, LendLogTable
 from .filters import ToolFilter
 from .barcode_gen import Sheet
 
@@ -56,6 +56,14 @@ class ToolCreate(CreateView):
     success_url = reverse_lazy('tools')
     template_name = 'tool_reg.html'
 
+
+class LendLogView(SingleTableView):
+    model = Lendlog
+    table_class = LendLogTable
+    template_name = 'stats.html'
+
+    def get_queryset(self, *args, **kwargs):
+        return Lendlog.objects.order_by("-status")
 
 def Overview(request):
     active = Lendlog.objects.filter(status=1)

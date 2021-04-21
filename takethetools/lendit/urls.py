@@ -13,6 +13,7 @@ from .views import (
     registerUser,
     ToolCreate,
     ToolList,
+    LendLogView,
     UserList,
     test_view
 )
@@ -22,7 +23,7 @@ urlpatterns = [
     path("display_users/", registerUser, name="reguser"),
     path("tools/", ToolList.as_view(), name="tools"),
     path("users/", UserList.as_view(), name="users"),
-    path("overview/", Overview, name="overview"),
+    path("overview/", LendLogView.as_view(), name="overview"),
     path("register_user/", registerUser, name="register_user"),
     path('tool/create', ToolCreate.as_view(), name='tool_create'),
     path("adduser/", addUser, name="adduser"),
@@ -33,5 +34,6 @@ urlpatterns = [
     path("clearbasket/", clearbasket, name="clearbasket"),
     path("checkout/", Checkout, name="checkout"),
     path('<str:barcode_ean13_no_check_bit>/add/', test_view, name='test_view'),
+    path('<str:barcode_ean13_no_check_bit>/add/', test_view, name='lendlog_button_view'),
 ]
 
