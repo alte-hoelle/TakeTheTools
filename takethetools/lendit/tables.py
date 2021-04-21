@@ -28,6 +28,7 @@ class ToolTable(tables.Table):
             "owner",
             "description",
         )
+        sequence = ('image', 'name', 'brand', 'model', 'owner', 'description', 'my_column')
 
 
 class UserTable(LenditTable):
