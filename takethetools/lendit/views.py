@@ -65,13 +65,6 @@ class LendLogView(SingleTableView):
     def get_queryset(self, *args, **kwargs):
         return Lendlog.objects.order_by("-status")
 
-def Overview(request):
-    active = Lendlog.objects.filter(status=1)
-    inactive = Lendlog.objects.filter(status=0)
-
-    context = {"active": active, "returned": inactive}
-    return render(request, "stats.html", context)
-
 
 def registerUser(request):
     context = {"UserRegistrationForm": UserRegistrationForm, "UserRegistrationFormChip": UserRegistrationFormChip}

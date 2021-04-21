@@ -69,7 +69,6 @@ class ToolTable(tables.Table):
         return format_html('<b>{}</b>', record.name)
 
 
-
 class UserTable(LenditTable):
     # We cannot use the definition via Meta here,
     # as the Usermodel cannot be imported, but needs

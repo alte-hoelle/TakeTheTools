@@ -1,5 +1,4 @@
 from django.urls import path
-from django.conf.urls import include, url
 from .views import (
     addToCart,
     addUser,
@@ -9,7 +8,6 @@ from .views import (
     exportBarcodes,
     exportBarcodesPDF,
     Home,
-    Overview,
     registerUser,
     ToolCreate,
     ToolList,
