@@ -13,9 +13,8 @@ class LenditTable(tables.Table):
 
 class LendLogTable(tables.Table):
 
-    #status = tables.Column(order_by=("status",))
     image = tables.TemplateColumn('<img src="/media/{{record.tool.img}}" style="width:60px;"> ')
-    my_column = tables.TemplateColumn(verbose_name='Auswählen',
+    my_column = tables.TemplateColumn(verbose_name='Status',
                                       template_name='lendlog_table_button.html',
                                       orderable=False)  # orderable not sortable
 
@@ -24,7 +23,6 @@ class LendLogTable(tables.Table):
         attrs = ATTRS
         fields = (
             'tool',
-            'status',
             'from_date',
             'expected_end_date',
             'end_date',
@@ -32,19 +30,12 @@ class LendLogTable(tables.Table):
         )
         sequence = (
             'image',
-            'status',
             'tool',
             'from_date',
             'expected_end_date',
             'end_date',
             'lend_by'
         )
-
-    def render_status(self, record):
-        if record.status:
-            return format_html('<input type="button" style=background-color:red></input>')
-        else:
-            return format_html('<input type="button" style=background-color:green></input>')
 
 
 class ToolTable(tables.Table):
@@ -63,7 +54,6 @@ class ToolTable(tables.Table):
             "model",
             "owner",
             "description",
-            "present_amount"
         )
         sequence = (
             'image',
@@ -72,15 +62,12 @@ class ToolTable(tables.Table):
             'model',
             'owner',
             'description',
-            'present_amount',
             'my_column'
         )
 
-    def render_present_amount(self, record):
-        if record.present_amount:
-            return format_html('<input type="button" style=background-color:green value={}></input>', record.present_amount)
-        else:
-            return format_html('<input type="button" style=background-color:red value={}></input>', record.present_amount)
+    def render_name(self, record):
+        return format_html('<b>{}</b>', record.name)
+
 
 
 class UserTable(LenditTable):

@@ -6,7 +6,7 @@
     <form action="{% url 'lendlog_button_view' record.tool.barcode_ean13_no_check_bit %}" method ="post">
     {% csrf_token %}
 
-    <input class="btn btn-primary" type="submit" name="lend" value="->" />
+    <input class="{% if record.status %}btn btn-danger{% else %}btn btn-success{% endif %}" type="submit" name="lend" value="{% if record.status %}zurückgeben{% else %}erneut leihen{% endif %}" />
     </form>
 
 
