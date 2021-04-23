@@ -1,0 +1,9 @@
+takethetools
+============
+
+.. toctree::
+   :maxdepth: 4
+
+   lendit
+   manage
+   takethetools

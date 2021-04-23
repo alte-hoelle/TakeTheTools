@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lendit.tables &#8212; TakeTheToolz 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for lendit.tables</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">django_tables2</span> <span class="k">as</span> <span class="nn">tables</span>
+<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="k">import</span> <span class="n">format_html</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Tool</span><span class="p">,</span> <span class="n">Lendlog</span>
+
+<span class="n">ATTRS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;table table-responsive table-striped table-hover&quot;</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">LenditTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ATTRS</span>
+
+
+<span class="k">class</span> <span class="nc">LendLogTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">TemplateColumn</span><span class="p">(</span><span class="s1">&#39;&lt;img src=&quot;/media/{{record.tool.img}}&quot; style=&quot;width:60px;&quot;&gt; &#39;</span><span class="p">)</span>
+    <span class="n">my_column</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">TemplateColumn</span><span class="p">(</span><span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;Status&#39;</span><span class="p">,</span>
+                                      <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;lendlog_table_button.html&#39;</span><span class="p">,</span>
+                                      <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># orderable not sortable</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Lendlog</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ATTRS</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;tool&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;from_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;expected_end_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;end_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lend_by&#39;</span>
+        <span class="p">)</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;image&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;tool&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;from_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;expected_end_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;end_date&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lend_by&#39;</span>
+        <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ToolTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">TemplateColumn</span><span class="p">(</span><span class="s1">&#39;&lt;img src=&quot;/media/{{record.img}}&quot; style=&quot;width:60px;&quot;&gt; &#39;</span><span class="p">)</span>
+    <span class="n">my_column</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">TemplateColumn</span><span class="p">(</span><span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;Auswählen&#39;</span><span class="p">,</span>
+                                      <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;tool_table_button.html&#39;</span><span class="p">,</span>
+                                      <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># orderable not sortable</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Tool</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">ATTRS</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brand&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;owner&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;image&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;brand&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;model&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;owner&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;my_column&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{}</span><span class="s1">&lt;/b&gt;&#39;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">UserTable</span><span class="p">(</span><span class="n">LenditTable</span><span class="p">):</span>
+    <span class="c1"># We cannot use the definition via Meta here,</span>
+    <span class="c1"># as the Usermodel cannot be imported, but needs</span>
+    <span class="c1"># to be fetched with get_user_model()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">()</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">()</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Column</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">TakeTheToolz</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/all-about-us.html">All about us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/views.html">Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/models.html">Models</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Lukas Becker, Florian Rämisch, Simon Couball.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

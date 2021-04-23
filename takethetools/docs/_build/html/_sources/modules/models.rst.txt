@@ -1,0 +1,6 @@
+Models
+=======
+
+.. automodule:: lendit.models
+   :members:
+   :undoc-members:

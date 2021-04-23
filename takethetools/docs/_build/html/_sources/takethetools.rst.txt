@@ -1,0 +1,53 @@
+takethetools package
+====================
+
+Submodules
+----------
+
+takethetools.asgi module
+------------------------
+
+.. automodule:: takethetools.asgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+takethetools.secrets module
+---------------------------
+
+.. automodule:: takethetools.secrets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+takethetools.settings module
+----------------------------
+
+.. automodule:: takethetools.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+takethetools.urls module
+------------------------
+
+.. automodule:: takethetools.urls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+takethetools.wsgi module
+------------------------
+
+.. automodule:: takethetools.wsgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: takethetools
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,117 @@
+lendit package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   lendit.migrations
+
+Submodules
+----------
+
+lendit.admin module
+-------------------
+
+.. automodule:: lendit.admin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.apps module
+------------------
+
+.. automodule:: lendit.apps
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.barcode\_gen module
+--------------------------
+
+.. automodule:: lendit.barcode_gen
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.filters module
+---------------------
+
+.. automodule:: lendit.filters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.forms module
+-------------------
+
+.. automodule:: lendit.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.helpers module
+---------------------
+
+.. automodule:: lendit.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.models module
+--------------------
+
+.. automodule:: lendit.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.tables module
+--------------------
+
+.. automodule:: lendit.tables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.tests module
+-------------------
+
+.. automodule:: lendit.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.urls module
+------------------
+
+.. automodule:: lendit.urls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.utils module
+-------------------
+
+.. automodule:: lendit.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+lendit.views module
+-------------------
+
+.. automodule:: lendit.views
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: lendit
+   :members:
+   :undoc-members:
+   :show-inheritance:

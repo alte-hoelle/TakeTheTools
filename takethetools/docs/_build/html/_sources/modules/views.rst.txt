@@ -1,0 +1,6 @@
+Views
+======
+
+.. automodule:: lendit.views
+   :members:
+   :undoc-members:

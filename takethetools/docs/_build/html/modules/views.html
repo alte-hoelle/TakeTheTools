@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Views &#8212; TakeTheToolz 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="All about us" href="all-about-us.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-lendit.views">
+<span id="views"></span><h1>Views<a class="headerlink" href="#module-lendit.views" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="lendit.views.Cart">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">Cart</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#Cart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.Cart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.Checkout">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">Checkout</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#Checkout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.Checkout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="lendit.views.Home">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">Home</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#Home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.Home" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="lendit.views.Home.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'home.html'</span></em><a class="headerlink" href="#lendit.views.Home.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="lendit.views.LendLogView">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">LendLogView</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#LendLogView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.LendLogView" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="lendit.views.LendLogView.get_queryset">
+<code class="sig-name descname"><span class="pre">get_queryset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#LendLogView.get_queryset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.LendLogView.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of items for this view.</p>
+<p>The return value must be an iterable and may be an instance of
+<cite>QuerySet</cite> in which case <cite>QuerySet</cite> specific behavior will be enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.LendLogView.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#lendit.views.LendLogView.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#lendit.models.Lendlog" title="lendit.models.Lendlog"><code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.models.Lendlog</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.LendLogView.table_class">
+<code class="sig-name descname"><span class="pre">table_class</span></code><a class="headerlink" href="#lendit.views.LendLogView.table_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.tables.LendLogTable</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.LendLogView.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'stats.html'</span></em><a class="headerlink" href="#lendit.views.LendLogView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="lendit.views.ToolCreate">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">ToolCreate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#ToolCreate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.ToolCreate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="lendit.views.ToolCreate.form_class">
+<code class="sig-name descname"><span class="pre">form_class</span></code><a class="headerlink" href="#lendit.views.ToolCreate.form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.forms.ToolRegistrationForm</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolCreate.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#lendit.views.ToolCreate.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#lendit.models.Tool" title="lendit.models.Tool"><code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.models.Tool</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolCreate.success_url">
+<code class="sig-name descname"><span class="pre">success_url</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'/lendit/tools/'</span></em><a class="headerlink" href="#lendit.views.ToolCreate.success_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolCreate.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'tool_reg.html'</span></em><a class="headerlink" href="#lendit.views.ToolCreate.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="lendit.views.ToolList">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">ToolList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#ToolList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.ToolList" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="lendit.views.ToolList.filterset_class">
+<code class="sig-name descname"><span class="pre">filterset_class</span></code><a class="headerlink" href="#lendit.views.ToolList.filterset_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.filters.ToolFilter</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolList.model">
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#lendit.views.ToolList.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#lendit.models.Tool" title="lendit.models.Tool"><code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.models.Tool</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolList.queryset">
+<code class="sig-name descname"><span class="pre">queryset</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;QuerySet</span> <span class="pre">[&lt;Tool:</span> <span class="pre">Atemschutzmaske</span> <span class="pre">Moldex&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Heißluftföhn</span> <span class="pre">Mannesmann&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Taschenlampe</span> <span class="pre">Dewalt&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Akku</span> <span class="pre">18V</span> <span class="pre">4Ah</span> <span class="pre">Dewalt&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Schraubstock</span> <span class="pre">Peddinghaus&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Exzenterschleifer</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Excenterschleifer</span> <span class="pre">Metabo&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Akkuschrauberset</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Säbelsäge</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Akkuschrauber</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Pendelhubstichsäge</span> <span class="pre">TCM&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Multitool</span> <span class="pre">Dewalt&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Tacker</span> <span class="pre">BEA&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Winkelschleifer</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Stichsäge</span> <span class="pre">Black</span> <span class="pre">&amp;</span> <span class="pre">Decker&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Schwingschleifer</span> <span class="pre">Kress&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Doppelschleifer</span> <span class="pre">Interkrenn&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Winkelschleifer</span> <span class="pre">Bosch&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Heissluftföhn</span> <span class="pre">Rapid&gt;,</span> <span class="pre">&lt;Tool:</span> <span class="pre">Handkreissäge</span> <span class="pre">AEG&gt;,</span> <span class="pre">'...(remaining</span> <span class="pre">elements</span> <span class="pre">truncated)...']&gt;</span></em><a class="headerlink" href="#lendit.views.ToolList.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolList.table_class">
+<code class="sig-name descname"><span class="pre">table_class</span></code><a class="headerlink" href="#lendit.views.ToolList.table_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.tables.ToolTable</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.ToolList.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'tool_list.html'</span></em><a class="headerlink" href="#lendit.views.ToolList.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="lendit.views.UserList">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">UserList</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#UserList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.UserList" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="lendit.views.UserList.get_queryset">
+<code class="sig-name descname"><span class="pre">get_queryset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#UserList.get_queryset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.UserList.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of items for this view.</p>
+<p>The return value must be an iterable and may be an instance of
+<cite>QuerySet</cite> in which case <cite>QuerySet</cite> specific behavior will be enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.UserList.table_class">
+<code class="sig-name descname"><span class="pre">table_class</span></code><a class="headerlink" href="#lendit.views.UserList.table_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">lendit.tables.UserTable</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="lendit.views.UserList.template_name">
+<code class="sig-name descname"><span class="pre">template_name</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'user_list.html'</span></em><a class="headerlink" href="#lendit.views.UserList.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.addToCart">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">addToCart</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#addToCart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.addToCart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.addUser">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">addUser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#addUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.addUser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.clearbasket">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">clearbasket</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#clearbasket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.clearbasket" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.exportBarcodes">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">exportBarcodes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#exportBarcodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.exportBarcodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.exportBarcodesPDF">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">exportBarcodesPDF</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#exportBarcodesPDF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.exportBarcodesPDF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.lendTool">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">lendTool</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barcode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.datetime(2021,</span> <span class="pre">4,</span> <span class="pre">23,</span> <span class="pre">7,</span> <span class="pre">22,</span> <span class="pre">52,</span> <span class="pre">1497)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lender</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">purpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Verein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#lendTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.lendTool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.registerUser">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">registerUser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#registerUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.registerUser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="lendit.views.test_view">
+<code class="sig-prename descclassname"><span class="pre">lendit.views.</span></code><code class="sig-name descname"><span class="pre">test_view</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barcode_ean13_no_check_bit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'999999999999'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lendit/views.html#test_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lendit.views.test_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">TakeTheToolz</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="all-about-us.html">All about us</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="all-about-us.html" title="previous chapter">All about us</a></li>
+      <li>Next: <a href="models.html" title="next chapter">Models</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Lukas Becker, Florian Rämisch, Simon Couball.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/modules/views.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
