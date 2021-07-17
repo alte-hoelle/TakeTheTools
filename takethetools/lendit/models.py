@@ -138,3 +138,19 @@ class Lendlog(models.Model):
 
     def __str__(self):
         return "Tool " + self.tool.name + " by " + str(self.lend_by)
+
+
+class Note(models.Model):
+    PRIO_CHOICES = (
+        ('H', 'High'),
+        ('M', 'Medium'),
+        ('L', 'Low'),
+    )
+    text = models.TextField()
+    title = models.CharField(max_length=120)
+    prio = models.CharField(max_length=1, choices=PRIO_CHOICES)
+    author = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.SET_DEFAULT, default=1)
+    date = models.DateTimeField(default=timezone.now, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.title)

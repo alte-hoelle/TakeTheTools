@@ -19,26 +19,30 @@
                 <a class="nav-link active" href="{% url 'home' %}">Startseite</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'cart' %}">Werkzeuge auswählen</a>
+                <a class="nav-link" href="{% url 'cart' %}">Warenkorb</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'overview' %}">Verleihübersicht</a>
+                <a class="nav-link" href="{% url 'overview' %}">Verleih</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'tools' %}">Werkzeugübersicht</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'users' %}">Benutzerinnenübersicht</a>
+                <a class="nav-link" href="{% url 'users' %}">Benutzerinnen</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'register_user' %}">Neue Benutzerin registrieren</a>
+                <a class="nav-link" href="{% url 'register_user' %}">Neue Benutzerin</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'tool_create' %}">Werkzeug hinzufügen</a>
+                <a class="nav-link" href="{% url 'tool_create' %}">Neues Werkzeug</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'export' %}">Barcodes drucken</a>
+                <a class="nav-link" href="{% url 'export' %}">Barcodes</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'notes' %}">Notizen</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

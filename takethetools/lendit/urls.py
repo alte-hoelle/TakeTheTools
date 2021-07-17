@@ -13,13 +13,15 @@ from .views import (
     ToolList,
     LendLogView,
     UserList,
-    test_view
+    test_view,
+    Notes
 )
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
     path("display_users/", registerUser, name="reguser"),
     path("tools/", ToolList.as_view(), name="tools"),
+    path("notes/", Notes.as_view(), name="notes"),
     path("users/", UserList.as_view(), name="users"),
     path("overview/", LendLogView.as_view(), name="overview"),
     path("register_user/", registerUser, name="register_user"),

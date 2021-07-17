@@ -1,10 +1,8 @@
 import django_tables2 as tables
+from .models import Tool, Note, Lendlog
 from django.utils.html import format_html
 
-from .models import Tool, Lendlog
-
 ATTRS = {"class": "table table-responsive table-striped table-hover"}
-
 
 class LenditTable(tables.Table):
     class Meta:
@@ -73,6 +71,18 @@ class UserTable(LenditTable):
     # We cannot use the definition via Meta here,
     # as the Usermodel cannot be imported, but needs
     # to be fetched with get_user_model()
-    id = tables.Column()
     username = tables.Column()
     email = tables.Column()
+
+class NoteTable(tables.Table):
+
+    class Meta:
+        model = Note
+        attrs = ATTRS
+        fields = (
+            "title",
+            "author",
+            "text",
+            "prio",
+        )
+

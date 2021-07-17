@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import CreateView
 from django_filters.views import FilterView
 
@@ -22,9 +22,11 @@ from .forms import (
     UserRegistrationForm,
     ToolRegistrationForm,
     UserRegistrationFormChip,
+    NoteForm,
 )
-from .models import Tool, Lendlog, Purpose, CustomUser
-from .tables import ToolTable, UserTable, LendLogTable
+
+from .models import Tool, Lendlog, Purpose, CustomUser, Note
+from .tables import ToolTable, UserTable, NoteTable, LendLogTable
 from .filters import ToolFilter
 from .barcode_gen import Sheet
 
@@ -49,6 +51,24 @@ class UserList(SingleTableView):
 class Home(TemplateView):
     template_name = "home.html"
 
+class Notes(View):
+    model = Note
+    template_name = "notes.html"
+    form_class = NoteForm
+   # table_class = NoteTable
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form, 'notes': self.get_queryset()})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("notes")
+
+    def get_queryset(self, *args, **kwargs):
+        return Note.objects.order_by("date")
 
 class ToolCreate(CreateView):
     model = Tool

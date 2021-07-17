@@ -5,7 +5,8 @@ from .models import (
     Lendlog,
     Category,
     CustomUser,
-    CustomImage
+    CustomImage,
+    Note
 )
 # Register your models here.
 
@@ -16,4 +17,5 @@ admin.site.register(Lendlog)
 admin.site.register(Category)
 admin.site.register(CustomUser)
 admin.site.register(CustomImage)
+admin.site.register(Note)
 

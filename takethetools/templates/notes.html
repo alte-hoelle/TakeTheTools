@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %} Notizen {% endblock %}
+
+{% block body %}
+
+{% load crispy_forms_tags %}
+<h1> Neue Notiz hinzufügen</h1>
+
+<form action="{% url 'notes' %}" method ="post">
+
+    <div class="p-3 border bg-light">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Fehler!</strong>{{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="form-row">
+
+      <div class="form-group col-md-8 mb-0">
+        {{ form.title|as_crispy_field }}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+
+        {{ form.prio |as_crispy_field}}
+      </div>
+        <div class="form-group col-md-2 mb-0">
+
+        {{ form.author |as_crispy_field}}
+      </div>
+    </div>
+    <div class="form-row">
+    <div class="form-group col-md-12 mb-0">
+
+        {{ form.text|as_crispy_field }}
+      </div>
+    </div>
+
+
+    <input type="submit" value="Speichern", class="btn btn-success">
+    </div>
+
+
+</form>
+
+
+{% if notes %}
+<div class="row">
+
+				<div class="col-md-8">
+
+                    {% for note in notes reversed %}
+
+                    <div class="commented-section mt-2">
+                    <div class="d-flex flex-row align-items-center commented-user">
+                        <h5 class="mr-2">{{note.author}}</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">{{note.title}}</span>
+                    </div>
+                    <div class="comment-text-sm"><span>{{note.text}}</span></div>
+                    <div class="reply-section">
+                        <div class="">{{note.date}}</span><span class="dot ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+                        {{ local_name.text }}
+
+                    {% endfor %}
+                </div>
+</div>
+{% else %}
+Bisher keine Notizen
+{% endif %}
+
+{% endblock %}
