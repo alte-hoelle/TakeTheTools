@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load render_table from django_tables2 %}
 {% block title %}
 Statistik
 {% endblock %}
@@ -10,6 +10,14 @@ Statistik
 
 
 {% block body %}
+
+<div class="row mt-5">
+    <div class="col">
+        {% render_table table 'django_tables2/bootstrap4.html' %}
+    </div>
+</div>
+
+
 {% if active %}
 <table class="table table-warning">
 	<thead>

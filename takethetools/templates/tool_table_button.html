@@ -6,7 +6,7 @@
     <form action="{% url 'test_view' record.barcode_ean13_no_check_bit %}" method ="post">
     {% csrf_token %}
 
-    <input class="btn btn-primary" type="submit" name="lend" value="+" />
+    <input class="{% if record.present_amount <= 0 %}btn btn-danger{% else %}btn btn-success{% endif %}" type="submit" name="lend" value="{% if record.present_amount <= 0 %}hinzufügen (nur zurückgeben){% else %}hinzufügen ({{record.present_amount}} stk. vorhanden){% endif %}" />
     </form>
 
 

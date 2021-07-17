@@ -13,6 +13,5 @@ class ToolFilter(filters.FilterSet):
         fields = {
             'name':['contains'],
             'model':['contains'],
-            'brand':['contains'],
-            'barcode_ean13_no_check_bit':['exact']
+            'brand':['contains']
         }

@@ -24,8 +24,9 @@ from .forms import (
     UserRegistrationFormChip,
     NoteForm,
 )
+
 from .models import Tool, Lendlog, Purpose, CustomUser, Note
-from .tables import ToolTable, UserTable, NoteTable
+from .tables import ToolTable, UserTable, NoteTable, LendLogTable
 from .filters import ToolFilter
 from .barcode_gen import Sheet
 
@@ -76,16 +77,17 @@ class ToolCreate(CreateView):
     template_name = 'tool_reg.html'
 
 
-def Overview(request):
-    active = Lendlog.objects.filter(status=1)
-    inactive = Lendlog.objects.filter(status=0)
+class LendLogView(SingleTableView):
+    model = Lendlog
+    table_class = LendLogTable
+    template_name = 'stats.html'
 
-    context = {"active": active, "returned": inactive}
-    return render(request, "stats.html", context)
+    def get_queryset(self, *args, **kwargs):
+        return Lendlog.objects.order_by("-status")
 
 
 def registerUser(request):
-    context = {"form": UserRegistrationForm, "form_chip": UserRegistrationFormChip}
+    context = {"UserRegistrationForm": UserRegistrationForm, "UserRegistrationFormChip": UserRegistrationFormChip}
     return render(request, "user_reg.html", context)
 
 
@@ -154,6 +156,8 @@ def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
         user = CustomUser.objects.get(chip_id = lender)
     except Exception as e:
         return False, "User was not found"
+    if current_tool.present_amount <= 0:
+        return False, "Tool not present"
 
     newlog = Lendlog(
         tool=current_tool,
@@ -177,6 +181,7 @@ def Checkout(request):
 
     form = CheckoutForm(request.POST)
     form_in = CheckinForm(request.POST)
+    cart = AddItemToCartIDForm(request.POST)
 
     ids = request.session["cart"]
     if not ids:
@@ -185,6 +190,7 @@ def Checkout(request):
 
     if "lend" in request.POST:
         #print(form.cleaned_data["lendby"])
+
         if form.is_valid():
 
             idlist = ids.split(",")
@@ -202,6 +208,9 @@ def Checkout(request):
 
             clearbasket(request)
             messages.success(request, "Alles ausgeliehen!")
+        else:
+            messages.error(request, str(form.non_field_errors()))
+
 
     elif "return" in request.POST:
 
@@ -224,6 +233,9 @@ def Checkout(request):
                     idlist.remove(str(lend.tool.barcode_ean13_no_check_bit))
                     return_cnt += 1
                     lend.save()
+
+                    lend.tool.present_amount += 1
+                    lend.tool.save()
             if not idlist:
                 request.session["cart"] = ""
                 messages.success(
@@ -236,6 +248,7 @@ def Checkout(request):
                     str(return_cnt)
                     + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?",
                 )
+
     else:
         pass
     return redirect("cart")
@@ -244,6 +257,7 @@ def Checkout(request):
 def addToCart(request):
 
     form = AddItemToCartIDForm(request.POST or None)
+    print(form.data)
 
     if "add" in request.POST:
         if form.is_valid():
@@ -323,14 +337,17 @@ def exportBarcodes(request):
 
 def exportBarcodesPDF(request):
 
-    form = ExportSelectionForm()
+    form = ExportSelectionForm(request.POST or None)
     export_sheet = Sheet()
 
-    for field in form.get_interest_fields():
-        export_sheet.add_tool(int(field.name))
+    if form.is_valid():
+        for a in form.cleaned_data:
+            if form.cleaned_data[a] > 0:
+                export_sheet.add_tool(int(a), form.cleaned_data[a])
 
     export_sheet.list()
     export_sheet.export()
+    del export_sheet
     return redirect("export")
 
 def test_view(request, barcode_ean13_no_check_bit='999999999999'):
