@@ -99,6 +99,7 @@ class ToolRegistrationForm(forms.ModelForm):
             'description',
             'owner',
             'available_amount',
+            #''present_amount',
             'sec_class',
             'trust_class',
             'buy_date',
@@ -128,6 +129,7 @@ class ToolRegistrationForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         image_link = cleaned_data.get('link')
+        #cleaned_data['present_amount'] = cleaned_data['available_amount']
         if image_link not in ("", None):
 
             im = CustomImage()
@@ -147,6 +149,11 @@ class ToolRegistrationForm(forms.ModelForm):
             except Exception:
                 raise ValidationError('No default image exists, either mark one as default or add a picture URL')
 
+    def save(self, commit=True):
+        tool = super().save(commit=False)  # here the object is not commited in db
+        tool.present_amount = self.cleaned_data['available_amount']
+        tool.save()
+        return tool
 
 class ExportSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
