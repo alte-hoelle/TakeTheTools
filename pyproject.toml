@@ -45,7 +45,9 @@ good-names = [
 
 [tool.pylint.message_control]
 disable = [
-    "missing-module-docstring", "missing-class-docstring", "missing-function-docstring",
+    "missing-module-docstring", 
+    "missing-class-docstring", 
+    "missing-function-docstring",
     "line-too-long",
     "too-few-public-methods",
     "duplicate-code",
