@@ -17,6 +17,7 @@ wget = "^3.2"
 django-tables2 = "^2.3.4"
 django-filter = "^2.4.0"
 requests = "^2.25.1"
+black = "^21.9-beta.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"

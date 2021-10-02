@@ -43,7 +43,7 @@ class UserList(SingleTableView):
     template_name = "user_list.html"
     table_class = UserTable
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self, *_args, **_kwargs):
         User = get_user_model()
         return User.objects.all()
 
@@ -51,15 +51,18 @@ class UserList(SingleTableView):
 class Home(TemplateView):
     template_name = "home.html"
 
+
 class Notes(View):
     model = Note
     template_name = "notes.html"
     form_class = NoteForm
-   # table_class = NoteTable
+    # table_class = NoteTable
 
     def get(self, request, *args, **kwargs):
         form = self.form_class
-        return render(request, self.template_name, {'form': form, 'notes': self.get_queryset()})
+        return render(
+            request, self.template_name, {"form": form, "notes": self.get_queryset()}
+        )
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -70,24 +73,28 @@ class Notes(View):
     def get_queryset(self, *args, **kwargs):
         return Note.objects.order_by("date")
 
+
 class ToolCreate(CreateView):
     model = Tool
     form_class = ToolRegistrationForm
-    success_url = reverse_lazy('tools')
-    template_name = 'tool_reg.html'
+    success_url = reverse_lazy("tools")
+    template_name = "tool_reg.html"
 
 
 class LendLogView(SingleTableView):
     model = Lendlog
     table_class = LendLogTable
-    template_name = 'stats.html'
+    template_name = "stats.html"
 
     def get_queryset(self, *args, **kwargs):
         return Lendlog.objects.order_by("-status")
 
 
 def registerUser(request):
-    context = {"UserRegistrationForm": UserRegistrationForm, "UserRegistrationFormChip": UserRegistrationFormChip}
+    context = {
+        "UserRegistrationForm": UserRegistrationForm,
+        "UserRegistrationFormChip": UserRegistrationFormChip,
+    }
     return render(request, "user_reg.html", context)
 
 
@@ -130,22 +137,25 @@ def addUser(request):
             first_name="",
         )
 
-        output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(32))
+        output_string = "".join(
+            random.SystemRandom().choice(string.ascii_letters + string.digits)
+            for _ in range(32)
+        )
         newuser.set_password(output_string)
         newuser.save()
         newcustomuser = CustomUser(
-            user = newuser,
-            chip_id =  make_password(form_chip.cleaned_data["chip_id"], settings.CHIP_SALT)
+            user=newuser,
+            chip_id=make_password(
+                form_chip.cleaned_data["chip_id"], settings.CHIP_SALT
+            ),
         )
-
 
         newuser.set_password(output_string)
         newcustomuser.save()
 
-        return redirect('users')
+        return redirect("users")
     else:
         return redirect("index")
-
 
 
 def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
@@ -153,7 +163,7 @@ def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
     current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
     purpose = Purpose.objects.get(name=purpose)
     try:
-        user = CustomUser.objects.get(chip_id = lender)
+        user = CustomUser.objects.get(chip_id=lender)
     except Exception as e:
         return False, "User was not found"
     if current_tool.present_amount <= 0:
@@ -189,17 +199,19 @@ def Checkout(request):
         return redirect("cart")
 
     if "lend" in request.POST:
-        #print(form.cleaned_data["lendby"])
+        # print(form.cleaned_data["lendby"])
 
         if form.is_valid():
 
             idlist = ids.split(",")
             for id in idlist:
                 ok, msg = lendTool(
-                        barcode=id,
-                        purpose=form.cleaned_data["purpose"],
-                        end=form.cleaned_data["expected_end"],
-                        lender= make_password(form.cleaned_data["lendby"], settings.CHIP_SALT)
+                    barcode=id,
+                    purpose=form.cleaned_data["purpose"],
+                    end=form.cleaned_data["expected_end"],
+                    lender=make_password(
+                        form.cleaned_data["lendby"], settings.CHIP_SALT
+                    ),
                 )
 
                 if not ok:
@@ -211,13 +223,16 @@ def Checkout(request):
         else:
             messages.error(request, str(form.non_field_errors()))
 
-
     elif "return" in request.POST:
 
         if form_in.is_valid():
             try:
 
-                returner = CustomUser.objects.get(chip_id = make_password(form_in.cleaned_data["returned_by"], settings.CHIP_SALT))
+                returner = CustomUser.objects.get(
+                    chip_id=make_password(
+                        form_in.cleaned_data["returned_by"], settings.CHIP_SALT
+                    )
+                )
 
             except Exception as e:
                 messages.error(request, "User/Chip ID not found")
@@ -350,9 +365,12 @@ def exportBarcodesPDF(request):
     del export_sheet
     return redirect("export")
 
-def test_view(request, barcode_ean13_no_check_bit='999999999999'):
 
-    if Tool.objects.filter(barcode_ean13_no_check_bit=barcode_ean13_no_check_bit).exists():
+def test_view(request, barcode_ean13_no_check_bit="999999999999"):
+
+    if Tool.objects.filter(
+        barcode_ean13_no_check_bit=barcode_ean13_no_check_bit
+    ).exists():
 
         if request.session["cart"]:
             old = request.session["cart"]
@@ -363,5 +381,4 @@ def test_view(request, barcode_ean13_no_check_bit='999999999999'):
     else:
         messages.error(request, "Kein valider Barcode")
 
-    return redirect(request.META['HTTP_REFERER'])
-
+    return redirect(request.META["HTTP_REFERER"])

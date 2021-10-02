@@ -7,6 +7,7 @@ import requests
 
 from .utils import gen_random_ean13_no_checkbit
 
+
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     chip_id = models.CharField(max_length=512)
@@ -28,7 +29,7 @@ class Category(models.Model):
 
 
 class CustomImage(models.Model):
-    image = models.ImageField(upload_to='icons')
+    image = models.ImageField(upload_to="icons")
     supplied_source = models.URLField(default="", blank=True)
     description = models.CharField(max_length=100, default="", blank=True)
     default = models.BooleanField(default=True)
@@ -36,7 +37,7 @@ class CustomImage(models.Model):
     def __str__(self):
         return str(self.image)
 
-    def save(self, path='',filename="", *args, **kwargs):
+    def save(self, path="", filename="", *args, **kwargs):
         if path in (None, "") and filename in (None, ""):
             super(CustomImage, self).save(*args, **kwargs)
         else:
@@ -56,9 +57,9 @@ class CustomImage(models.Model):
             else:
                 return False
                 # Implement local picture uploading
-                #try:
+                # try:
                 #    pilimage = Image.open(path)
-                #except:
+                # except:
                 #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
 
             try:
@@ -89,11 +90,7 @@ class Tool(models.Model):
     trust_class = models.IntegerField()
     buy_date = models.DateField(default=timezone.now, null=True, blank=True)
     img = models.ForeignKey(
-        CustomImage,
-        default=None,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True
+        CustomImage, default=None, on_delete=models.SET_NULL, blank=True, null=True
     )
     barcode_ean13_no_check_bit = models.CharField(
         unique=True, max_length=12, default=gen_random_ean13_no_checkbit
@@ -142,14 +139,16 @@ class Lendlog(models.Model):
 
 class Note(models.Model):
     PRIO_CHOICES = (
-        ('H', 'High'),
-        ('M', 'Medium'),
-        ('L', 'Low'),
+        ("H", "High"),
+        ("M", "Medium"),
+        ("L", "Low"),
     )
     text = models.TextField()
     title = models.CharField(max_length=120)
     prio = models.CharField(max_length=1, choices=PRIO_CHOICES)
-    author = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.SET_DEFAULT, default=1)
+    author = models.ForeignKey(
+        CustomUser, null=True, blank=True, on_delete=models.SET_DEFAULT, default=1
+    )
     date = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):

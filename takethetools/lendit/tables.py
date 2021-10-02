@@ -4,6 +4,7 @@ from django.utils.html import format_html
 
 ATTRS = {"class": "table table-responsive table-striped table-hover"}
 
+
 class LenditTable(tables.Table):
     class Meta:
         attrs = ATTRS
@@ -11,37 +12,39 @@ class LenditTable(tables.Table):
 
 class LendLogTable(tables.Table):
 
-    image = tables.TemplateColumn('<img src="/media/{{record.tool.img}}" style="width:60px;"> ')
-    my_column = tables.TemplateColumn(verbose_name='Status',
-                                      template_name='lendlog_table_button.html',
-                                      orderable=False)  # orderable not sortable
+    image = tables.TemplateColumn(
+        '<img src="/media/{{record.tool.img}}" style="width:60px;"> '
+    )
+    my_column = tables.TemplateColumn(
+        verbose_name="Status",
+        template_name="lendlog_table_button.html",
+        orderable=False,
+    )  # orderable not sortable
 
     class Meta:
         model = Lendlog
         attrs = ATTRS
-        fields = (
-            'tool',
-            'from_date',
-            'expected_end_date',
-            'end_date',
-            'lend_by'
-        )
+        fields = ("tool", "from_date", "expected_end_date", "end_date", "lend_by")
         sequence = (
-            'image',
-            'tool',
-            'from_date',
-            'expected_end_date',
-            'end_date',
-            'lend_by'
+            "image",
+            "tool",
+            "from_date",
+            "expected_end_date",
+            "end_date",
+            "lend_by",
         )
 
 
 class ToolTable(tables.Table):
 
-    image = tables.TemplateColumn('<img src="/media/{{record.img}}" style="width:60px;"> ')
-    my_column = tables.TemplateColumn(verbose_name='Auswählen',
-                                      template_name='tool_table_button.html',
-                                      orderable=False)  # orderable not sortable
+    image = tables.TemplateColumn(
+        '<img src="/media/{{record.img}}" style="width:60px;"> '
+    )
+    my_column = tables.TemplateColumn(
+        verbose_name="Auswählen",
+        template_name="tool_table_button.html",
+        orderable=False,
+    )  # orderable not sortable
 
     class Meta:
         model = Tool
@@ -54,17 +57,17 @@ class ToolTable(tables.Table):
             "description",
         )
         sequence = (
-            'image',
-            'name',
-            'brand',
-            'model',
-            'owner',
-            'description',
-            'my_column'
+            "image",
+            "name",
+            "brand",
+            "model",
+            "owner",
+            "description",
+            "my_column",
         )
 
     def render_name(self, record):
-        return format_html('<b>{}</b>', record.name)
+        return format_html("<b>{}</b>", record.name)
 
 
 class UserTable(LenditTable):
@@ -74,8 +77,8 @@ class UserTable(LenditTable):
     username = tables.Column()
     email = tables.Column()
 
-class NoteTable(tables.Table):
 
+class NoteTable(tables.Table):
     class Meta:
         model = Note
         attrs = ATTRS
@@ -85,4 +88,3 @@ class NoteTable(tables.Table):
             "text",
             "prio",
         )
-
