@@ -8,64 +8,73 @@ from crispy_forms.layout import Layout, Div, Submit, Field, Fieldset
 
 from .models import Purpose, Tool, CustomImage, Note
 
+
 class UserRegistrationForm(forms.Form):
-    username = forms.CharField(max_length=100,label='Nutzerin')
-    password = forms.CharField(widget=forms.PasswordInput, max_length=100,label='Password')
-    email = forms.CharField(max_length=100,label='Mail')
+    username = forms.CharField(max_length=100, label="Nutzerin")
+    password = forms.CharField(
+        widget=forms.PasswordInput, max_length=100, label="Password"
+    )
+    email = forms.CharField(max_length=100, label="Mail")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_class = 'form-row p-3 mt-4 mb-4 border bg-light form-inline'
-        self.helper.field_class = 'col-auto'
+        self.helper.form_class = "form-row p-3 mt-4 mb-4 border bg-light form-inline"
+        self.helper.field_class = "col-auto"
 
         self.helper.layout = Layout(
-            Field('username', placeholder='Nutzerin'),
-            Field('password', placeholder='Password'),
-            Field('email', placeholder='Mail'),
+            Field("username", placeholder="Nutzerin"),
+            Field("password", placeholder="Password"),
+            Field("email", placeholder="Mail"),
         )
-        self.helper.form_method = 'post'
-        self.helper.form_action = 'adduser'
+        self.helper.form_method = "post"
+        self.helper.form_action = "adduser"
         self.helper.form_show_labels = False
-        self.helper.add_input(Submit('submit', 'Registrieren'))
+        self.helper.add_input(Submit("submit", "Registrieren"))
 
 
 class UserRegistrationFormChip(forms.Form):
-    username = forms.CharField(max_length=100, label='Nutzerin')
-    email = forms.CharField(max_length=100, label='Mail')
-    chip_id = forms.CharField(max_length=10, label='Chip ID')
+    username = forms.CharField(max_length=100, label="Nutzerin")
+    email = forms.CharField(max_length=100, label="Mail")
+    chip_id = forms.CharField(max_length=10, label="Chip ID")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_class = 'form-row p-3 mt-4 mb-4 border bg-light form-inline'
-        self.helper.field_class = 'col-auto'
+        self.helper.form_class = "form-row p-3 mt-4 mb-4 border bg-light form-inline"
+        self.helper.field_class = "col-auto"
 
         self.helper.layout = Layout(
-            Field('username', placeholder='Nutzerin'),
-            Field('email', placeholder='Mail'),
-            Field('chip_id', placeholder='Chip ID'),
+            Field("username", placeholder="Nutzerin"),
+            Field("email", placeholder="Mail"),
+            Field("chip_id", placeholder="Chip ID"),
         )
-        self.helper.form_method = 'post'
-        self.helper.form_action = 'adduser'
+        self.helper.form_method = "post"
+        self.helper.form_action = "adduser"
         self.helper.form_show_labels = False
-        self.helper.add_input(Submit('submit', 'Mit Chip registrieren'))
+        self.helper.add_input(Submit("submit", "Mit Chip registrieren"))
 
 
 class AddItemToCartIDForm(forms.Form):
-    item_id = forms.CharField(label='Werkzeug-ID',
-                              strip=True,
-                              widget=forms.TextInput(attrs={
-                                                            'placeholder': 'Werkzeug-ID',
-                                                            'class': 'form-control',
-                                                            'autofocus': True
-                                                            })
-                              )
+    item_id = forms.CharField(
+        label="Werkzeug-ID",
+        strip=True,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Werkzeug-ID",
+                "class": "form-control",
+                "autofocus": True,
+            }
+        ),
+    )
 
 
 class CheckoutForm(forms.Form):
-    expected_end = forms.DateField(label="Rückgabe am", input_formats=['%d/%m/%Y'],
-                                   widget=DatePickerInput(format='%d/%m/%Y'))
+    expected_end = forms.DateField(
+        label="Rückgabe am",
+        input_formats=["%d/%m/%Y"],
+        widget=DatePickerInput(format="%d/%m/%Y"),
+    )
 
     purpose = forms.ModelChoiceField(label="Zweck", queryset=Purpose.objects.all())
     lendby = forms.CharField(label="ChipID")
@@ -87,103 +96,108 @@ class ToolRegistrationForm(forms.ModelForm):
     image from the image-url (if any) is downloaded and saved. If any error
     occurs during this step, a ValidationError is raised.
     """
+
     link = forms.URLField(label="Bild URL", required=False)
 
     class Meta:
         model = Tool
         fields = (
-            'name',
-            'model',
-            'brand',
-            'price',
-            'description',
-            'owner',
-            'available_amount',
+            "name",
+            "model",
+            "brand",
+            "price",
+            "description",
+            "owner",
+            "available_amount",
             #''present_amount',
-            'sec_class',
-            'trust_class',
-            'buy_date',
-            'category',
-            'barcode_ean13_no_check_bit',
-            'img'
+            "sec_class",
+            "trust_class",
+            "buy_date",
+            "category",
+            "barcode_ean13_no_check_bit",
+            "img",
         )
-        widgets = {
-            'buy_date': DatePickerInput(format='%Y-%m-%d')
-        }
+        widgets = {"buy_date": DatePickerInput(format="%Y-%m-%d")}
         labels = {
-            'name': 'Bezeichnung',
-            'model': 'Modellnummer',
-            'brand': 'Marke',
-            'price': 'Kaufpreis',
-            'description': 'Kommentar',
-            'owner': 'Eigentümerin',
-            'available_amount': 'Verfügbare Menge',
-            'sec_class': 'Sicherheitsklasse',
-            'trust_class': 'Vertrauensklasse',
-            'buy_date': 'Kaufdatum',
-            'category': 'Kategorie',
-            'barcode_ean13_no_check_bit': 'Barcode',
-
+            "name": "Bezeichnung",
+            "model": "Modellnummer",
+            "brand": "Marke",
+            "price": "Kaufpreis",
+            "description": "Kommentar",
+            "owner": "Eigentümerin",
+            "available_amount": "Verfügbare Menge",
+            "sec_class": "Sicherheitsklasse",
+            "trust_class": "Vertrauensklasse",
+            "buy_date": "Kaufdatum",
+            "category": "Kategorie",
+            "barcode_ean13_no_check_bit": "Barcode",
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        image_link = cleaned_data.get('link')
-        #cleaned_data['present_amount'] = cleaned_data['available_amount']
+        image_link = cleaned_data.get("link")
+        # cleaned_data['present_amount'] = cleaned_data['available_amount']
         if image_link not in ("", None):
 
             im = CustomImage()
-            im.supplied_source = cleaned_data.get('link')
-            f_name = cleaned_data.get('name') + '_' + \
-                cleaned_data.get('brand') + '_' + \
-                cleaned_data.get('model') + '_' + \
-                cleaned_data.get('barcode_ean13_no_check_bit') + ".jpg"
+            im.supplied_source = cleaned_data.get("link")
+            f_name = (
+                cleaned_data.get("name")
+                + "_"
+                + cleaned_data.get("brand")
+                + "_"
+                + cleaned_data.get("model")
+                + "_"
+                + cleaned_data.get("barcode_ean13_no_check_bit")
+                + ".jpg"
+            )
 
-            if not im.save(cleaned_data.get('link'), f_name):
-                raise ValidationError('Image from given Link not downloadable or not an Image.')
+            if not im.save(cleaned_data.get("link"), f_name):
+                raise ValidationError(
+                    "Image from given Link not downloadable or not an Image."
+                )
 
-            cleaned_data['img'] = im
+            cleaned_data["img"] = im
         else:
             try:
-                cleaned_data['img'] = CustomImage.objects.get(default=True) # unsafe, there could be multiple
+                cleaned_data["img"] = CustomImage.objects.get(
+                    default=True
+                )  # unsafe, there could be multiple
             except Exception:
-                raise ValidationError('No default image exists, either mark one as default or add a picture URL')
+                raise ValidationError(
+                    "No default image exists, either mark one as default or add a picture URL"
+                )
 
     def save(self, commit=True):
         tool = super().save(commit=False)  # here the object is not commited in db
-        tool.present_amount = self.cleaned_data['available_amount']
+        tool.present_amount = self.cleaned_data["available_amount"]
         tool.save()
         return tool
+
 
 class ExportSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         tools = Tool.objects.all()
         for tool in tools:
-            self.fields[str(tool.id)] = forms.IntegerField(label = str(tool), initial=0, required=True, min_value=0)
-
+            self.fields[str(tool.id)] = forms.IntegerField(
+                label=str(tool), initial=0, required=True, min_value=0
+            )
 
     def get_interest_fields(self):
         for field_name in self.fields:
             print(self[field_name].value)
             yield self[field_name]
-            
+
 
 class NoteForm(forms.ModelForm):
-
     class Meta:
         model = Note
-        fields = (
-            'title',
-            'text',
-            'prio',
-            'author'
-        )
+        fields = ("title", "text", "prio", "author")
 
         labels = {
-            'title': 'Titel',
-            'text': 'Notiz',
-            'prio': 'Priorität',
-            'author': 'Benutzerin'
+            "title": "Titel",
+            "text": "Notiz",
+            "prio": "Priorität",
+            "author": "Benutzerin",
         }
-        

@@ -1,2 +1,2 @@
-SECRET_KEY = 'supersecretkey'
-CHIP_SALT = 'supersecretsalt'
+SECRET_KEY = "supersecretkey"
+CHIP_SALT = "supersecretsalt"
