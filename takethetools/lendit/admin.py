@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Tool, Purpose, Lendlog, Category, CustomUser, CustomImage, Note
+
+from .models import (Category, CustomImage, CustomUser, Lendlog, Note, Purpose,
+                     Tool)
 
 # Register your models here.
 

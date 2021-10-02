@@ -1,7 +1,8 @@
-from .models import Tool, CustomUser, CustomImage
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from django.conf import settings
+
+from .models import CustomImage, CustomUser, Tool
 
 
 def make_ids_barcode_field():

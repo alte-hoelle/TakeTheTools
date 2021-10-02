@@ -1,9 +1,11 @@
-from .models import Tool
+import os
+
+import numpy as np
 from barcode import EAN13
 from barcode.writer import ImageWriter
-from PIL import Image, ImageFont, ImageDraw
-import os
-import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+
+from .models import Tool
 
 
 class Sheet:

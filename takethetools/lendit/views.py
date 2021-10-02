@@ -1,34 +1,25 @@
-import string
 import random
-
+import string
 from datetime import datetime
-from django_tables2 import SingleTableView, SingleTableMixin
 
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from django.contrib import messages
-from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import CreateView
 from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin, SingleTableView
 
-from .forms import (
-    ExportSelectionForm,
-    CheckoutForm,
-    CheckinForm,
-    AddItemToCartIDForm,
-    UserRegistrationForm,
-    ToolRegistrationForm,
-    UserRegistrationFormChip,
-    NoteForm,
-)
-
-from .models import Tool, Lendlog, Purpose, CustomUser, Note
-from .tables import ToolTable, UserTable, NoteTable, LendLogTable
-from .filters import ToolFilter
 from .barcode_gen import Sheet
+from .filters import ToolFilter
+from .forms import (AddItemToCartIDForm, CheckinForm, CheckoutForm,
+                    ExportSelectionForm, NoteForm, ToolRegistrationForm,
+                    UserRegistrationForm, UserRegistrationFormChip)
+from .models import CustomUser, Lendlog, Note, Purpose, Tool
+from .tables import LendLogTable, NoteTable, ToolTable, UserTable
 
 
 class ToolList(SingleTableMixin, FilterView):

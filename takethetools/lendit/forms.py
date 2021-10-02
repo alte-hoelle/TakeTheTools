@@ -1,12 +1,12 @@
-from bootstrap_datepicker_plus import DatePickerInput
 from datetime import datetime
 
+from bootstrap_datepicker_plus import DatePickerInput
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Div, Field, Fieldset, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit, Field, Fieldset
 
-from .models import Purpose, Tool, CustomImage, Note
+from .models import CustomImage, Note, Purpose, Tool
 
 
 class UserRegistrationForm(forms.Form):

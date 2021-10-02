@@ -17,12 +17,14 @@ wget = "^3.2"
 django-tables2 = "^2.3.4"
 django-filter = "^2.4.0"
 requests = "^2.25.1"
-mypy = "^0.910"
-pylint = "^2.11.1"
-black = "^21.9-beta.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"
+mypy = "^0.910"
+pylint = "^2.11.1"
+black = "^21.9-beta.0"
+pylint-django = "^2.4.4"
+isort = "^5.9.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -31,6 +33,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.pylint.master]
 ignore = "takethetools/db.sqlite3"
 jobs = 0
+load-plugins = ["pylint_django"]
 
 [tool.pylint.basic]
 good-names = [
@@ -47,6 +50,7 @@ disable = [
     "too-few-public-methods",
     "duplicate-code",
     "too-many-ancestors",
+    "django-not-configured"
 ]
 enable = ["useless-suppression"]
 
