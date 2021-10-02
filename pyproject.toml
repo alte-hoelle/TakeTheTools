@@ -17,6 +17,8 @@ wget = "^3.2"
 django-tables2 = "^2.3.4"
 django-filter = "^2.4.0"
 requests = "^2.25.1"
+mypy = "^0.910"
+pylint = "^2.11.1"
 black = "^21.9-beta.0"
 
 [tool.poetry.dev-dependencies]
@@ -25,3 +27,28 @@ flake8 = "^3.8.4"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.master]
+ignore = "takethetools/db.sqlite3"
+jobs = 0
+
+[tool.pylint.basic]
+good-names = [
+    "i", # iterator
+    "_", "__", "___", # unneeded variable
+    "T", # generic type
+    "id",
+]
+
+[tool.pylint.message_control]
+disable = [
+    "missing-module-docstring", "missing-class-docstring", "missing-function-docstring",
+    "line-too-long",
+    "too-few-public-methods",
+    "duplicate-code",
+    "too-many-ancestors",
+]
+enable = ["useless-suppression"]
+
+[tool.pylint.design]
+max-attributes = 10
