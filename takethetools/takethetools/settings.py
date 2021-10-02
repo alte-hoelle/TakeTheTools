@@ -19,11 +19,9 @@ DEBUG = True
 ENVIRONMENT = "dev"
 
 if ENVIRONMENT == "dev":
-    from .secrets_dev import SECRET_KEY
-    from .secrets_dev import CHIP_SALT
+    from .secrets_dev import CHIP_SALT, SECRET_KEY
 else:
-    from .secrets_prod import SECRET_KEY
-    from .secrets_prod import CHIP_SALT
+    from .secrets_prod import CHIP_SALT, SECRET_KEY
 
 # Application definition
 

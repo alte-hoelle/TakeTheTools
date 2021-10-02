@@ -1,6 +1,7 @@
 import django_tables2 as tables
-from .models import Tool, Note, Lendlog
 from django.utils.html import format_html
+
+from .models import Lendlog, Note, Tool
 
 ATTRS = {"class": "table table-responsive table-striped table-hover"}
 

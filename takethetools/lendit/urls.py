@@ -1,21 +1,8 @@
 from django.urls import path
-from .views import (
-    addToCart,
-    addUser,
-    Cart,
-    Checkout,
-    clearbasket,
-    exportBarcodes,
-    exportBarcodesPDF,
-    Home,
-    registerUser,
-    ToolCreate,
-    ToolList,
-    LendLogView,
-    UserList,
-    test_view,
-    Notes,
-)
+
+from .views import (Cart, Checkout, Home, LendLogView, Notes, ToolCreate,
+                    ToolList, UserList, addToCart, addUser, clearbasket,
+                    exportBarcodes, exportBarcodesPDF, registerUser, test_view)
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
