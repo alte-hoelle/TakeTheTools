@@ -21,7 +21,7 @@ class Category(models.Model):
     needs_power = models.BooleanField(default=False)
     needs_battery = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -38,30 +38,29 @@ class CustomImage(models.Model):
         if path in (None, "") and filename in (None, ""):
             super(CustomImage, self).save(*args, **kwargs)
             return False
-        else:
-            if "http" in path:
-                request = requests.get(path, stream=True)
-                if request.status_code == 200:
+        if "http" in path:
+            request = requests.get(path, stream=True)
+            if request.status_code == 200:
 
-                    request.raw.decode_content = True
-                    image = Image.open(request.raw)
-                    image.thumbnail((60, 60), Image.ANTIALIAS)
-                    image.save("media/icons/" + filename)
-                    try:
-                        self.image = "icons/" + filename
-                    except Exception:
-                        return False
-                    super(CustomImage, self).save(*args, **kwargs)
-                    return True
-            return False
+                request.raw.decode_content = True
+                image = Image.open(request.raw)
+                image.thumbnail((60, 60), Image.ANTIALIAS)
+                image.save("media/icons/" + filename)
+                try:
+                    self.image = "icons/" + filename
+                except Exception:
+                    return False
+                super(CustomImage, self).save(*args, **kwargs)
+                return True
+        return False
 
-            # else:
-            #    return False
-            # Implement local picture uploading
-            # try:
-            #    pilimage = Image.open(path)
-            # except:
-            #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+        # else:
+        #    return False
+        # Implement local picture uploading
+        # try:
+        #    pilimage = Image.open(path)
+        # except:
+        #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
 
 
 class Tool(models.Model):

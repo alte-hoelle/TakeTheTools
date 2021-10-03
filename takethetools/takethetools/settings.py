@@ -20,10 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 ENVIRONMENT = "dev"
 
+# pylint: disable=unused-import
 if ENVIRONMENT == "dev":
-    from .secrets_dev import CHIP_SALT, SECRET_KEY  # pylint: disable=unused-import>
+    from .secrets_dev import CHIP_SALT, SECRET_KEY
 else:
-    from .secrets_prod import CHIP_SALT, SECRET_KEY  # pylint: disable=unused-import
+    from .secrets_prod import CHIP_SALT, SECRET_KEY
 
 # Application definition
 
