@@ -1,7 +1,7 @@
 from random import randint
 
 
-def gen_random_ean13_no_checkbit(prefix="99"):
+def gen_random_ean13_no_checkbit(prefix: str = "99") -> str:
     """
     Generates a random barcode, respecting the length of the given prefix.
     """

@@ -27,10 +27,10 @@ def create_custom_user_models():
 def migrate_pictures():
     tools = Tool.objects.all()
     for tool in tools:
-        im = CustomImage(supplied_source=tool.used_img_urls)
-        im.save(
+        image = CustomImage(supplied_source=tool.used_img_urls)
+        image.save(
             "/home/stoerte/Software/django-begin/takethetools/staticfiles/"
             + str(tool.img_local_link)
         )
-        tool.img = im
+        tool.img = image
         tool.save()

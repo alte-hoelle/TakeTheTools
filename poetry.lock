@@ -486,6 +486,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "types-requests"
+version = "2.25.9"
+description = "Typing stubs for requests"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -525,7 +533,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "85b449da5670c3ba8f7e8e3e3fae8c851575786f412c7f9978e7ce550ca488e2"
+content-hash = "648da9725b2f9c01f38aca71cf40b68e28b6d26c8d00def5685f0d78230c2940"
 
 [metadata.files]
 asgiref = [
@@ -856,6 +864,10 @@ types-pytz = [
 types-pyyaml = [
     {file = "types-PyYAML-5.4.10.tar.gz", hash = "sha256:1d9e431e9f1f78a65ea957c558535a3b15ad67ea4912bce48a6c1b613dcf81ad"},
     {file = "types_PyYAML-5.4.10-py3-none-any.whl", hash = "sha256:f1d1357168988e45fa20c65aecb3911462246a84809015dd889ebf8b1db74124"},
+]
+types-requests = [
+    {file = "types-requests-2.25.9.tar.gz", hash = "sha256:4ec8b71da73e5344adb9bee725a74ec8598e7286f9bcb17500d627f259fe4fb9"},
+    {file = "types_requests-2.25.9-py3-none-any.whl", hash = "sha256:543ba8b3b23e38ac028da1d163aecbbc27d3cc8f654ae64339da539a191a2b1c"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},

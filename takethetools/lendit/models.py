@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.db import models
 from django.utils import timezone
 from PIL import Image
@@ -24,9 +24,6 @@ class Category(models.Model):
     def __unicode__(self):
         return self.name
 
-    def __str__(self):
-        return self.name
-
 
 class CustomImage(models.Model):
     image = models.ImageField(upload_to="icons")
@@ -40,36 +37,31 @@ class CustomImage(models.Model):
     def save(self, path="", filename="", *args, **kwargs):
         if path in (None, "") and filename in (None, ""):
             super(CustomImage, self).save(*args, **kwargs)
+            return False
         else:
             if "http" in path:
+                request = requests.get(path, stream=True)
+                if request.status_code == 200:
 
-                r = requests.get(path, stream=True)
-                if r.status_code == 200:
+                    request.raw.decode_content = True
+                    image = Image.open(request.raw)
+                    image.thumbnail((60, 60), Image.ANTIALIAS)
+                    image.save("media/icons/" + filename)
+                    try:
+                        self.image = "icons/" + filename
+                    except Exception:
+                        return False
+                    super(CustomImage, self).save(*args, **kwargs)
+                    return True
+            return False
 
-                    r.raw.decode_content = True
-                    im = Image.open(r.raw)
-                    im.thumbnail((60, 60), Image.ANTIALIAS)
-                    im.save("media/icons/" + filename)
-
-                else:
-                    return False
-
-            else:
-                return False
-                # Implement local picture uploading
-                # try:
-                #    pilimage = Image.open(path)
-                # except:
-                #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
-
-            try:
-                self.image = "icons/" + filename
-
-            except Exception as e:
-                return False
-            super(CustomImage, self).save(*args, **kwargs)
-
-            return True
+            # else:
+            #    return False
+            # Implement local picture uploading
+            # try:
+            #    pilimage = Image.open(path)
+            # except:
+            #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
 
 
 class Tool(models.Model):
@@ -79,7 +71,7 @@ class Tool(models.Model):
     category = models.ForeignKey(
         Category, default=None, null=True, on_delete=models.CASCADE
     )
-    price = models.IntegerField()
+    price = models.IntegerField()  # why not float?
     description = models.TextField(blank=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, default=0, on_delete=models.SET_DEFAULT

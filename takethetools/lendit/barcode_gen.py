@@ -15,6 +15,7 @@ class Sheet:
     def __str__(self):
         pass
 
+    # pylint: disable=too-many-locals,too-many-statements
     def export(self):
         os.system("rm -r pa*")
         os.system("mkdir barcodes")
@@ -32,8 +33,8 @@ class Sheet:
         )
         for tool in self.barcodes:
 
-            with open("barcodes/" + str(tool[0]) + ".png", "wb") as f:
-                EAN13(str(tool[0]), writer=ImageWriter()).write(f)
+            with open("barcodes/" + str(tool[0]) + ".png", "wb") as file:
+                EAN13(str(tool[0]), writer=ImageWriter()).write(file)
 
             image = Image.open("barcodes/" + str(tool[0]) + ".png")
             image = image.crop((0, 30, 523, 280))
@@ -73,8 +74,8 @@ class Sheet:
                         # if there are enough rows for a page, save the pdf and start new
                         stichted = np.concatenate((stichted, stichted_row), axis=0)
                         final = np.concatenate((top_spacer, stichted), axis=0)
-                        im = Image.fromarray(final)
-                        im.save("pa" + str(pages) + ".pdf", "PDF")
+                        image = Image.fromarray(final)
+                        image.save("pa" + str(pages) + ".pdf", "PDF")
                         y_images = 0
                         pages += 1
 
@@ -101,8 +102,8 @@ class Sheet:
                         stichted = np.concatenate((stichted, stichted_row), axis=0)
                     # add the current page content to the spacer
                     final = np.concatenate((top_spacer, stichted), axis=0)
-                    im = Image.fromarray(final)
-                    im.save("pa" + str(pages) + ".pdf", "PDF")
+                    image = Image.fromarray(final)
+                    image.save("pa" + str(pages) + ".pdf", "PDF")
                     y_images = 0
 
         os.system("rm -r barcodes")
@@ -110,8 +111,8 @@ class Sheet:
     def add_tool(self, barcode, number):
         try:
             tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
-        except Exception as e:
-            print(e, barcode)
+        except Exception as exception:
+            print(exception, barcode)
             return
 
         self.barcodes.append(

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,9 +21,9 @@ DEBUG = True
 ENVIRONMENT = "dev"
 
 if ENVIRONMENT == "dev":
-    from .secrets_dev import CHIP_SALT, SECRET_KEY # pylint: disable=unused-import
+    from .secrets_dev import CHIP_SALT, SECRET_KEY  # pylint: disable=unused-import>
 else:
-    from .secrets_prod import CHIP_SALT, SECRET_KEY # pylint: disable=unused-import
+    from .secrets_prod import CHIP_SALT, SECRET_KEY  # pylint: disable=unused-import
 
 # Application definition
 

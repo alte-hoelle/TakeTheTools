@@ -2,7 +2,7 @@ from datetime import datetime
 
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Field, Fieldset, Layout, Submit
+from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -139,8 +139,8 @@ class ToolRegistrationForm(forms.ModelForm):
         # cleaned_data['present_amount'] = cleaned_data['available_amount']
         if image_link not in ("", None):
 
-            im = CustomImage()
-            im.supplied_source = cleaned_data.get("link")
+            image = CustomImage()
+            image.supplied_source = cleaned_data.get("link")
             f_name = (
                 cleaned_data.get("name")
                 + "_"
@@ -152,21 +152,21 @@ class ToolRegistrationForm(forms.ModelForm):
                 + ".jpg"
             )
 
-            if not im.save(cleaned_data.get("link"), f_name):
+            if not image.save(cleaned_data.get("link"), f_name):
                 raise ValidationError(
                     "Image from given Link not downloadable or not an Image."
                 )
 
-            cleaned_data["img"] = im
+            cleaned_data["img"] = image
         else:
             try:
                 cleaned_data["img"] = CustomImage.objects.get(
                     default=True
                 )  # unsafe, there could be multiple
-            except Exception:
+            except Exception as no_default_image:
                 raise ValidationError(
                     "No default image exists, either mark one as default or add a picture URL"
-                )
+                ) from no_default_image
 
     def save(self, commit=True):
         tool = super().save(commit=False)  # here the object is not commited in db
