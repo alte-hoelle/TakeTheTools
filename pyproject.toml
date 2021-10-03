@@ -5,6 +5,7 @@ description = "A prototype for an easy to user tool and equipment lending tool f
 authors = ["stoertebeker23 <stoerte@posteo.net>"]
 
 [tool.poetry.dependencies]
+setuptools = "^58.2.0"
 python = "^3.9"
 Django = "^3.1.7"
 django-bootstrap4 = "^2.3.1"
