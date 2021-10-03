@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, View
@@ -15,11 +16,18 @@ from django_tables2 import SingleTableMixin, SingleTableView
 
 from .barcode_gen import Sheet
 from .filters import ToolFilter
-from .forms import (AddItemToCartIDForm, CheckinForm, CheckoutForm,
-                    ExportSelectionForm, NoteForm, ToolRegistrationForm,
-                    UserRegistrationForm, UserRegistrationFormChip)
+from .forms import (
+    AddItemToCartIDForm,
+    CheckinForm,
+    CheckoutForm,
+    ExportSelectionForm,
+    NoteForm,
+    ToolRegistrationForm,
+    UserRegistrationForm,
+    UserRegistrationFormChip,
+)
 from .models import CustomUser, Lendlog, Note, Purpose, Tool
-from .tables import LendLogTable, NoteTable, ToolTable, UserTable
+from .tables import LendLogTable, ToolTable, UserTable
 
 
 class ToolList(SingleTableMixin, FilterView):
@@ -35,8 +43,8 @@ class UserList(SingleTableView):
     table_class = UserTable
 
     def get_queryset(self, *_args, **_kwargs):
-        User = get_user_model()
-        return User.objects.all()
+        user = get_user_model()
+        return user.objects.all()
 
 
 class Home(TemplateView):
@@ -81,7 +89,7 @@ class LendLogView(SingleTableView):
         return Lendlog.objects.order_by("-status")
 
 
-def registerUser(request):
+def register_user(request: HttpRequest) -> HttpResponse:
     context = {
         "UserRegistrationForm": UserRegistrationForm,
         "UserRegistrationFormChip": UserRegistrationFormChip,
@@ -89,15 +97,15 @@ def registerUser(request):
     return render(request, "user_reg.html", context)
 
 
-def addUser(request):
+def add_user(request: HttpRequest) -> HttpResponse:
 
     form = UserRegistrationForm(request.POST)
     form_chip = UserRegistrationFormChip(request.POST)
 
     if form.is_valid():
-        User = get_user_model()
+        user = get_user_model()
 
-        newuser = User(
+        new_user = user(
             id=random.randint(1000000, 9999999),
             password="",
             last_login=datetime.now(),
@@ -110,12 +118,13 @@ def addUser(request):
             date_joined=datetime.now(),
             first_name="",
         )
-        newuser.set_password(form.cleaned_data["password"])
-        newuser.save()
+        new_user.set_password(form.cleaned_data["password"])
+        new_user.save()
         return redirect("users")
-    elif form_chip.is_valid():
-        User = get_user_model()
-        newuser = User(
+
+    if form_chip.is_valid():
+        user = get_user_model()
+        new_user = user(
             password="",
             last_login=datetime.now(),
             is_superuser=0,
@@ -132,35 +141,40 @@ def addUser(request):
             random.SystemRandom().choice(string.ascii_letters + string.digits)
             for _ in range(32)
         )
-        newuser.set_password(output_string)
-        newuser.save()
-        newcustomuser = CustomUser(
-            user=newuser,
+        new_user.set_password(output_string)
+        new_user.save()
+        new_custom_user = CustomUser(
+            user=new_user,
             chip_id=make_password(
                 form_chip.cleaned_data["chip_id"], settings.CHIP_SALT
             ),
         )
 
-        newuser.set_password(output_string)
-        newcustomuser.save()
+        new_user.set_password(output_string)
+        new_custom_user.save()
 
         return redirect("users")
-    else:
-        return redirect("index")
+
+    return redirect("index")
 
 
-def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
+def lend_tool(
+    barcode: int = 0,
+    end: int = datetime.today(),
+    chip_id: str = "",
+    purpose: str = "Verein",
+):
 
     current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
     purpose = Purpose.objects.get(name=purpose)
     try:
-        user = CustomUser.objects.get(chip_id=lender)
-    except Exception as e:
+        user = CustomUser.objects.get(chip_id=chip_id)
+    except Exception:
         return False, "User was not found"
     if current_tool.present_amount <= 0:
         return False, "Tool not present"
 
-    newlog = Lendlog(
+    new_log = Lendlog(
         tool=current_tool,
         from_date=datetime.today(),
         expected_end_date=end,
@@ -171,22 +185,21 @@ def lendTool(barcode=0, end=datetime.today(), lender=0, purpose="Verein"):
         purpose=purpose,
     )
 
-    newlog.save()
+    new_log.save()
 
     current_tool.present_amount = current_tool.present_amount - 1
     current_tool.save()
     return True, ""
 
 
-def Checkout(request):
+def checkout(request: HttpRequest) -> HttpResponse:
 
     form = CheckoutForm(request.POST)
     form_in = CheckinForm(request.POST)
-    cart = AddItemToCartIDForm(request.POST)
+    _cart = AddItemToCartIDForm(request.POST)
 
     ids = request.session["cart"]
     if not ids:
-
         return redirect("cart")
 
     if "lend" in request.POST:
@@ -194,18 +207,18 @@ def Checkout(request):
 
         if form.is_valid():
 
-            idlist = ids.split(",")
-            for id in idlist:
-                ok, msg = lendTool(
-                    barcode=id,
+            id_list = ids.split(",")
+            for barcode in id_list:
+                is_ok, msg = lend_tool(
+                    barcode=barcode,
                     purpose=form.cleaned_data["purpose"],
                     end=form.cleaned_data["expected_end"],
-                    lender=make_password(
+                    chip_id=make_password(
                         form.cleaned_data["lendby"], settings.CHIP_SALT
                     ),
                 )
 
-                if not ok:
+                if not is_ok:
                     messages.error(request, msg)
                     return redirect("cart")
 
@@ -225,30 +238,30 @@ def Checkout(request):
                     )
                 )
 
-            except Exception as e:
+            except Exception:
                 messages.error(request, "User/Chip ID not found")
-                return
+                return # HttpResponse('')
             lends_by_id = Lendlog.objects.filter(lend_by=returner, status=1)
-            idlist = ids.split(",")
+            id_list = ids.split(",")
             return_cnt = 0
             for lend in lends_by_id:
-                if str(lend.tool.barcode_ean13_no_check_bit) in idlist:
+                if str(lend.tool.barcode_ean13_no_check_bit) in id_list:
                     lend.returned_by = returner
                     lend.end_date = datetime.today()
                     lend.status = 0
-                    idlist.remove(str(lend.tool.barcode_ean13_no_check_bit))
+                    id_list.remove(str(lend.tool.barcode_ean13_no_check_bit))
                     return_cnt += 1
                     lend.save()
 
                     lend.tool.present_amount += 1
                     lend.tool.save()
-            if not idlist:
+            if not id_list:
                 request.session["cart"] = ""
                 messages.success(
                     request, "Alle " + str(return_cnt) + " Werkzeuge zurück gegeben"
                 )
             else:
-                request.session["cart"] = ",".join([str(item) for item in idlist])
+                request.session["cart"] = ",".join([str(item) for item in id_list])
                 messages.warning(
                     request,
                     str(return_cnt)
@@ -260,7 +273,7 @@ def Checkout(request):
     return redirect("cart")
 
 
-def addToCart(request):
+def add_to_cart(request: HttpRequest) -> HttpResponse:
 
     form = AddItemToCartIDForm(request.POST or None)
     print(form.data)
@@ -291,12 +304,12 @@ def addToCart(request):
     return redirect("cart")
 
 
-def clearbasket(request):
+def clearbasket(request: HttpRequest) -> HttpResponse:
     del request.session["cart"]
     return redirect("cart")
 
 
-def Cart(request):
+def cart(request: HttpRequest):
 
     display_dict = {}
     try:
@@ -308,9 +321,9 @@ def Cart(request):
 
         if display_cart:
             i = 1
-            for id in display_cart:
-                if id:
-                    temp_tool = Tool.objects.get(barcode_ean13_no_check_bit=id)
+            for item in display_cart:
+                if item:
+                    temp_tool = Tool.objects.get(barcode_ean13_no_check_bit=item)
                     display_dict[i] = [
                         temp_tool.name,
                         temp_tool.brand,
@@ -334,22 +347,22 @@ def Cart(request):
     return render(request, "cart.html", context)
 
 
-def exportBarcodes(request):
+def export_barcodes(request: HttpRequest) -> HttpResponse:
 
     context = {"form": ExportSelectionForm}
 
     return render(request, "export_barcodes.html", context)
 
 
-def exportBarcodesPDF(request):
+def export_barcodes_pdf(request: HttpRequest) -> HttpResponse:
 
     form = ExportSelectionForm(request.POST or None)
-    export_sheet = Sheet()
+    export_sheet: Sheet = Sheet()
 
     if form.is_valid():
-        for a in form.cleaned_data:
-            if form.cleaned_data[a] > 0:
-                export_sheet.add_tool(int(a), form.cleaned_data[a])
+        for key in form.cleaned_data:
+            if form.cleaned_data[key] > 0:
+                export_sheet.add_tool(int(key), form.cleaned_data[key])
 
     export_sheet.list()
     export_sheet.export()
@@ -357,7 +370,9 @@ def exportBarcodesPDF(request):
     return redirect("export")
 
 
-def test_view(request, barcode_ean13_no_check_bit="999999999999"):
+def test_view(
+    request: HttpRequest, barcode_ean13_no_check_bit: str = "999999999999"
+) -> HttpResponse:
 
     if Tool.objects.filter(
         barcode_ean13_no_check_bit=barcode_ean13_no_check_bit
