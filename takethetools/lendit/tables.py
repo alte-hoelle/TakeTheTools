@@ -67,6 +67,7 @@ class ToolTable(tables.Table):
             "my_column",
         )
 
+    # pylint: disable=no-self-use
     def render_name(self, record):
         return format_html("<b>{}</b>", record.name)
 
