@@ -69,7 +69,7 @@ class Notes(View):
             form.save()
         return redirect("notes")
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self, *args, **kwargs):  # pylint: disable=no-self-use
         return Note.objects.order_by("date")
 
 
@@ -192,84 +192,90 @@ def lend_tool(
     return True, ""
 
 
+def checkout_lend(request: HttpRequest, form) -> HttpResponse:
+    if form.is_valid():
+        ids = request.session["cart"]
+        id_list = ids.split(",")
+        for barcode in id_list:
+            is_ok, msg = lend_tool(
+                barcode=barcode,
+                purpose=form.cleaned_data["purpose"],
+                end=form.cleaned_data["expected_end"],
+                chip_id=make_password(form.cleaned_data["lendby"], settings.CHIP_SALT),
+            )
+
+            if not is_ok:
+                # todo: was ist das erwartet verhalten? Halber Cart wird eingecheckt, rest nicht weil fehler? Wie Fehler beheben?
+                # evtl besser Fehler merken und alles andere aber einchecken lassen.
+                messages.error(request, msg)
+                return redirect("cart")
+
+        clearbasket(request)
+        messages.success(request, "Ausleihen erfolgreich")
+    else:
+        messages.error(
+            request,
+            f"Fehler aufgetreten beim ausleihen: \n {str(form.non_field_errors())}",
+        )
+
+
+def checkout_return(request, form_in) -> HttpResponse:
+    if form_in.is_valid():
+        ids = request.session["cart"]
+        try:
+
+            returner = CustomUser.objects.get(
+                chip_id=make_password(
+                    form_in.cleaned_data["returned_by"], settings.CHIP_SALT
+                )
+            )
+
+        except Exception:
+            messages.error(request, "User/Chip ID not found")
+            return redirect("cart")
+        lends_by_id = Lendlog.objects.filter(lend_by=returner, status=1)
+        id_list = ids.split(",")
+        return_cnt = 0
+        for lend in lends_by_id:
+            if str(lend.tool.barcode_ean13_no_check_bit) in id_list:
+                lend.returned_by = returner
+                lend.end_date = datetime.today()
+                lend.status = 0
+                id_list.remove(str(lend.tool.barcode_ean13_no_check_bit))
+                return_cnt += 1
+                lend.save()
+
+                lend.tool.present_amount += 1
+                lend.tool.save()
+        if not id_list:
+            request.session["cart"] = ""
+            messages.success(
+                request, "Alle " + str(return_cnt) + " Werkzeuge zurück gegeben"
+            )
+        else:
+            request.session["cart"] = ",".join([str(item) for item in id_list])
+            messages.warning(
+                request,
+                str(return_cnt)
+                + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?",
+            )
+
+
 def checkout(request: HttpRequest) -> HttpResponse:
+    # default behavior is redirect("cart")
 
     form = CheckoutForm(request.POST)
     form_in = CheckinForm(request.POST)
     _cart = AddItemToCartIDForm(request.POST)
-
     ids = request.session["cart"]
+
     if not ids:
         return redirect("cart")
-
     if "lend" in request.POST:
-        # print(form.cleaned_data["lendby"])
-
-        if form.is_valid():
-
-            id_list = ids.split(",")
-            for barcode in id_list:
-                is_ok, msg = lend_tool(
-                    barcode=barcode,
-                    purpose=form.cleaned_data["purpose"],
-                    end=form.cleaned_data["expected_end"],
-                    chip_id=make_password(
-                        form.cleaned_data["lendby"], settings.CHIP_SALT
-                    ),
-                )
-
-                if not is_ok:
-                    messages.error(request, msg)
-                    return redirect("cart")
-
-            clearbasket(request)
-            messages.success(request, "Alles ausgeliehen!")
-        else:
-            messages.error(request, str(form.non_field_errors()))
-
+        return checkout_lend(request, form)
     elif "return" in request.POST:
+        return checkout_return(request, form_in)
 
-        if form_in.is_valid():
-            try:
-
-                returner = CustomUser.objects.get(
-                    chip_id=make_password(
-                        form_in.cleaned_data["returned_by"], settings.CHIP_SALT
-                    )
-                )
-
-            except Exception:
-                messages.error(request, "User/Chip ID not found")
-                return # HttpResponse('')
-            lends_by_id = Lendlog.objects.filter(lend_by=returner, status=1)
-            id_list = ids.split(",")
-            return_cnt = 0
-            for lend in lends_by_id:
-                if str(lend.tool.barcode_ean13_no_check_bit) in id_list:
-                    lend.returned_by = returner
-                    lend.end_date = datetime.today()
-                    lend.status = 0
-                    id_list.remove(str(lend.tool.barcode_ean13_no_check_bit))
-                    return_cnt += 1
-                    lend.save()
-
-                    lend.tool.present_amount += 1
-                    lend.tool.save()
-            if not id_list:
-                request.session["cart"] = ""
-                messages.success(
-                    request, "Alle " + str(return_cnt) + " Werkzeuge zurück gegeben"
-                )
-            else:
-                request.session["cart"] = ",".join([str(item) for item in id_list])
-                messages.warning(
-                    request,
-                    str(return_cnt)
-                    + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?",
-                )
-
-    else:
-        pass
     return redirect("cart")
 
 
