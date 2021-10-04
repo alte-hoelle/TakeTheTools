@@ -2,10 +2,10 @@ echo -e "\n##########################\n# Sorting imports alphabetically\n#######
 isort .
 
 echo -e "\n##########################\n# Running black\n##########################"
-black takethetools
+black src
 
-#echo -e "\n##########################\n# mypy on takethetools\n##########################"
-#mypy takethetools
+#echo -e "\n##########################\n# mypy on src\n##########################"
+#mypy src
 
 echo -e "\n##########################\n# pylint on takethetools\n##########################"
-pylint takethetools/*
+pylint src/*

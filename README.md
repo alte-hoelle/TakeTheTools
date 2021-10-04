@@ -14,7 +14,7 @@ Clone the repo to a directory of your choice. Install [poetry](https://python-po
 ```bash
 poetry install
 poetry shell
-cd takethetools
+PYTHONPATH=src 
 python manage.py makemigrations lendit
 python manage.py migrate
 python manage.py runserver 8080

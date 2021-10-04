@@ -18,7 +18,7 @@ from django.contrib.messages import constants as messages
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
-ENVIRONMENT = "dev"
+ENVIRONMENT = "prod"
 
 # pylint: disable=unused-import
 if ENVIRONMENT == "dev":
