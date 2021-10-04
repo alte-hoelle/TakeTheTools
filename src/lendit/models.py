@@ -34,7 +34,7 @@ class CustomImage(models.Model):
     def __str__(self) -> str:
         return str(self.image)
 
-    def save(self, path: str="", filename: str="", *args, **kwargs) -> bool:
+    def save(self, path: str = "", filename: str = "", *args, **kwargs) -> bool:
         if path in (None, "") and filename in (None, ""):
             super(CustomImage, self).save(*args, **kwargs)
             return False

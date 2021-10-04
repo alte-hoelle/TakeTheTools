@@ -134,7 +134,7 @@ class ToolRegistrationForm(forms.ModelForm):
             "category": "Kategorie",
             "barcode_ean13_no_check_bit": "Barcode",
         }
-   
+
     def clean(self) -> None:
         cleaned_data = super().clean()
         image_link = cleaned_data.get("link")
