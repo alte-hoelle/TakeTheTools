@@ -217,9 +217,10 @@ def checkout_lend(request: HttpRequest, form) -> HttpResponse:
             request,
             f"Fehler aufgetreten beim ausleihen: \n {str(form.non_field_errors())}",
         )
+    return redirect("cart")
 
 
-def checkout_return(request, form_in) -> HttpResponse:
+def checkout_return(request: HttpRequest, form_in) -> HttpResponse:
     if form_in.is_valid():
         ids = request.session["cart"]
         try:
@@ -259,6 +260,7 @@ def checkout_return(request, form_in) -> HttpResponse:
                 str(return_cnt)
                 + " Werkzeuge zurück gegeben, einige nicht, hast du sie geliehen?",
             )
+    return redirect("cart")
 
 
 def checkout(request: HttpRequest) -> HttpResponse:
