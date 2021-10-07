@@ -7,10 +7,9 @@ ENV PYTHONFAULTHANDLER=1 \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100
 WORKDIR /code
-RUN pip install poetry
-RUN apt update
-RUN apt install python3-setuptools -y
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - --preview
+ENV PATH "/root/.local/bin:$PATH"
 COPY poetry.lock pyproject.toml /code/
-RUN poetry config virtualenvs.create false \
-  && poetry update && poetry install --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-interaction --no-ansi
 COPY . /code/
