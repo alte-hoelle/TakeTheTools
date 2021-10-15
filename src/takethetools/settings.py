@@ -14,6 +14,16 @@ from pathlib import Path
 
 from django.contrib.messages import constants as messages
 
+from .secrets_dev import DEV_CHIP_SALT, DEV_SECRET_KEY
+
+try:
+    from .secrets_prod import (  # pylint: disable=import-error
+        PROD_CHIP_SALT,
+        PROD_SECRET_KEY,
+    )
+except Exception as exception:
+    print(exception)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,15 +40,14 @@ ALLOWED_HOSTS = [
     "forecastle.dhcp.intern.gv",
 ]
 
-# pylint: disable=unused-import
-if ENVIRONMENT == "dev":
-    from .secrets_dev import CHIP_SALT, SECRET_KEY
-else:
 
-    from .secrets_prod import (  # pylint: disable=import-error,useless-suppression
-        CHIP_SALT,
-        SECRET_KEY,
-    )
+CHIP_SALT = DEV_CHIP_SALT
+SECRET_KEY = DEV_SECRET_KEY
+
+if ENVIRONMENT == "prod":
+    CHIP_SALT = PROD_CHIP_SALT
+    SECRET_KEY = PROD_SECRET_KEY
+
 
 # Application definition
 
