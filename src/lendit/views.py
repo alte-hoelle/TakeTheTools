@@ -17,7 +17,7 @@ from django.views.generic.edit import CreateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from .barcode_gen import Sheet
+from .barcode_gen import Sheet  # type: ignore
 from .filters import ToolFilter
 from .forms import (
     AddItemToCartIDForm,
@@ -45,7 +45,7 @@ class UserList(SingleTableView):
     template_name = "user_list.html"
     table_class = UserTable
 
-    def get_queryset(self, *_args, **_kwargs):
+    def get_queryset(self, *_args, **_kwargs):  # type: ignore
         user = get_user_model()
         return user.objects.all()
 
@@ -60,23 +60,24 @@ class Notes(View):
     form_class = NoteForm
     # table_class = NoteTable
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs) -> HttpResponse:  # type: ignore
         form = self.form_class
         return render(
             request, self.template_name, {"form": form, "notes": self.get_queryset()}
         )
 
-    def post(self, request, *args, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs) -> HttpResponse:  # type: ignore
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
         return redirect("notes")
 
-    def get_queryset(self, *args, **kwargs) -> QuerySet:  # pylint: disable=no-self-use
+    # pylint: disable=no-self-use
+    def get_queryset(self, *args, **kwargs) -> QuerySet[Note]:  # type: ignore
         return Note.objects.order_by("date")
 
 
-class ToolCreate(CreateView):
+class ToolCreate(CreateView):  # type: ignore
     model = Tool
     form_class = ToolRegistrationForm
     success_url = reverse_lazy("tools")
@@ -88,7 +89,7 @@ class LendLogView(SingleTableView):
     table_class = LendLogTable
     template_name = "stats.html"
 
-    def get_queryset(self, *args, **kwargs) -> QuerySet:
+    def get_queryset(self, *args, **kwargs) -> QuerySet[Lendlog]:  # type: ignore
         return Lendlog.objects.order_by("-status")
 
 
@@ -112,12 +113,12 @@ def add_user(request: HttpRequest) -> HttpResponse:
             id=random.randint(1000000, 9999999),
             password="",
             last_login=datetime.now(),
-            is_superuser=0,
+            is_superuser=False,
             username=form.cleaned_data["username"],
             last_name="",
             email=form.cleaned_data["email"],
-            is_staff=0,
-            is_active=1,
+            is_staff=False,
+            is_active=True,
             date_joined=datetime.now(),
             first_name="",
         )
@@ -130,12 +131,12 @@ def add_user(request: HttpRequest) -> HttpResponse:
         new_user = user(
             password="",
             last_login=datetime.now(),
-            is_superuser=0,
+            is_superuser=False,
             username=form_chip.cleaned_data["username"],
             last_name="",
             email=form_chip.cleaned_data["email"],
-            is_staff=0,
-            is_active=1,
+            is_staff=False,
+            is_active=True,
             date_joined=datetime.now(),
             first_name="",
         )
@@ -163,13 +164,13 @@ def add_user(request: HttpRequest) -> HttpResponse:
 
 def lend_tool(
     barcode: int = 0,
-    end: int = datetime.today(),
+    end: datetime = datetime.today(),
     chip_id: str = "",
     purpose: str = "Verein",
 ) -> Tuple[bool, str]:
 
     current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
-    purpose = Purpose.objects.get(name=purpose)
+    purpose_obj: Purpose = Purpose.objects.get(name=purpose)
     try:
         user = CustomUser.objects.get(chip_id=chip_id)
     except Exception:
@@ -185,7 +186,7 @@ def lend_tool(
         status=1,
         lend_by=user,
         returned_by=None,
-        purpose=purpose,
+        purpose=purpose_obj,
     )
 
     new_log.save()
@@ -333,26 +334,26 @@ def cart(request: HttpRequest) -> HttpResponse:
             i = 1
             for item in display_cart:
                 if item:
-                    temp_tool = Tool.objects.get(barcode_ean13_no_check_bit=item)
+                    temp_tool: Tool = Tool.objects.get(barcode_ean13_no_check_bit=item)
                     display_dict[i] = [
                         temp_tool.name,
                         temp_tool.brand,
                         temp_tool.model,
                         temp_tool.description,
                         temp_tool.owner.username,
-                        temp_tool.img.image,
+                        temp_tool.img.image,  # type: ignore
                     ]
                     i += 1
 
     context = {}
     context["add_to_cart"] = AddItemToCartIDForm
-    context["checkout_form"] = CheckoutForm
-    context["checkin_form"] = CheckinForm
+    context["checkout_form"] = CheckoutForm  # type: ignore
+    context["checkin_form"] = CheckinForm  # type: ignore
 
     if display_dict:
-        context["cart"] = display_dict
+        context["cart"] = display_dict  # type: ignore
     else:
-        context["cart"] = False
+        context["cart"] = False  # type: ignore
 
     return render(request, "cart.html", context)
 
