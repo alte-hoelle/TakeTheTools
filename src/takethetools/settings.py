@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "takethetools.wsgi.application"
+WSGI_APPLICATION = "src.wsgi.application"
 
 
 # Database

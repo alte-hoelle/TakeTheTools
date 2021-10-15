@@ -33,7 +33,6 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pylint.master]
-ignore = "takethetools/db.sqlite3"
 jobs = 0
 load-plugins = ["pylint_django"]
 
@@ -65,7 +64,7 @@ max-attributes = 10
 
 [tool.mypy]
 python_version = 3.8
-#plugins = "mypy_django_plugin.main"
+plugins = ["mypy_django_plugin.main"]
 #strict_optional = true
 
 # output style configuration
@@ -92,8 +91,13 @@ disallow_untyped_calls = true
 [[tool.mypy.overrides]]
 module = [
     "django.core.wsgi",
-     "django.db.models"]
+     "django.db.models",
+     "bootstrap_datepicker_plus",
+     "crispy_forms.helper",
+     "crispy_forms.layout",
+     "django_tables2",
+     "PIL"]
 ignore_missing_imports = true
 
-#[[tool.mypy.plugins.django-stubs]]
-#django_settings_module = "takethetools.takethetools.settings"
+[tool.django-stubs]
+django_settings_module = "src.takethetools.settings"

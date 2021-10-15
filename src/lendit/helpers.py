@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 from .models import CustomImage, CustomUser, Tool
 
 
-def make_ids_barcode_field():
+def make_ids_barcode_field() -> None:
     tools = Tool.objects.all()
 
     for tool in tools:
@@ -14,7 +14,7 @@ def make_ids_barcode_field():
         tool.save()
 
 
-def create_custom_user_models():
+def create_custom_user_models() -> None:
     users = get_user_model().objects.all()
     for user in users:
         newcustomuser = CustomUser(
@@ -24,12 +24,12 @@ def create_custom_user_models():
         newcustomuser.save()
 
 
-def migrate_pictures():
+def migrate_pictures() -> None:
     tools = Tool.objects.all()
     for tool in tools:
         image = CustomImage(supplied_source=tool.used_img_urls)
         image.save(
-            "/home/stoerte/Software/django-begin/takethetools/staticfiles/"
+            "/home/stoerte/Software/django-begin/src/staticfiles/"
             + str(tool.img_local_link)
         )
         tool.img = image

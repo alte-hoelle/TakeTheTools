@@ -1,10 +1,12 @@
 from datetime import datetime
+from typing import Any
 
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models import Model
 
 from .models import CustomImage, Note, Purpose, Tool
 
@@ -16,7 +18,7 @@ class UserRegistrationForm(forms.Form):
     )
     email = forms.CharField(max_length=100, label="Mail")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = "form-row p-3 mt-4 mb-4 border bg-light form-inline"
@@ -38,7 +40,7 @@ class UserRegistrationFormChip(forms.Form):
     email = forms.CharField(max_length=100, label="Mail")
     chip_id = forms.CharField(max_length=10, label="Chip ID")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = "form-row p-3 mt-4 mb-4 border bg-light form-inline"
@@ -79,7 +81,7 @@ class CheckoutForm(forms.Form):
     purpose = forms.ModelChoiceField(label="Zweck", queryset=Purpose.objects.all())
     lendby = forms.CharField(label="ChipID")
 
-    def clean(self):
+    def clean(self) -> None:
         # this is not working as expected, no visible message is raised
         cleaned_data = super().clean()
         if cleaned_data["expected_end"] < datetime.today().date():
@@ -132,8 +134,24 @@ class ToolRegistrationForm(forms.ModelForm):
             "category": "Kategorie",
             "barcode_ean13_no_check_bit": "Barcode",
         }
+    added-pylint-action -> origin/added-pylint-action
+ ~/projects/dasistkunst/TakeTheTools  refactoring !12  git checkout added-pylint-action                                                                                                                                                                                                         ✔  TakeTheTools  
+M       poetry.lock
+M       pyproject.toml
+M       run_all_checks.sh
+M       src/lendit/barcode_gen.py
+M       src/lendit/forms.py
+M       src/lendit/helpers.py
+M       src/lendit/models.py
+M       src/lendit/tables.py
+M       src/lendit/views.py
+M       src/manage.py
 
-    def clean(self):
+
+
+
+ ~/projects/dasistkunst/TakeTheTools  added-pylint-action !12       
+    def clean(self) -> None:
         cleaned_data = super().clean()
         image_link = cleaned_data.get("link")
         # cleaned_data['present_amount'] = cleaned_data['available_amount']
@@ -168,7 +186,7 @@ class ToolRegistrationForm(forms.ModelForm):
                     "No default image exists, either mark one as default or add a picture URL"
                 ) from no_default_image
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> Model:
         tool = super().save(commit=False)  # here the object is not commited in db
         tool.present_amount = self.cleaned_data["available_amount"]
         tool.save()
@@ -176,7 +194,7 @@ class ToolRegistrationForm(forms.ModelForm):
 
 
 class ExportSelectionForm(forms.Form):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         tools = Tool.objects.all()
         for tool in tools:
@@ -184,7 +202,7 @@ class ExportSelectionForm(forms.Form):
                 label=str(tool), initial=0, required=True, min_value=0
             )
 
-    def get_interest_fields(self):
+    def get_interest_fields(self) -> None:
         for field_name in self.fields:
             print(self[field_name].value)
             yield self[field_name]
