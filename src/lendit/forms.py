@@ -134,23 +134,7 @@ class ToolRegistrationForm(forms.ModelForm):
             "category": "Kategorie",
             "barcode_ean13_no_check_bit": "Barcode",
         }
-    added-pylint-action -> origin/added-pylint-action
- ~/projects/dasistkunst/TakeTheTools  refactoring !12  git checkout added-pylint-action                                                                                                                                                                                                         ✔  TakeTheTools  
-M       poetry.lock
-M       pyproject.toml
-M       run_all_checks.sh
-M       src/lendit/barcode_gen.py
-M       src/lendit/forms.py
-M       src/lendit/helpers.py
-M       src/lendit/models.py
-M       src/lendit/tables.py
-M       src/lendit/views.py
-M       src/manage.py
-
-
-
-
- ~/projects/dasistkunst/TakeTheTools  added-pylint-action !12       
+   
     def clean(self) -> None:
         cleaned_data = super().clean()
         image_link = cleaned_data.get("link")
