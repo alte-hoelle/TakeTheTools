@@ -144,6 +144,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "10.10.0.88",
     "10.10.0.219",
+    "0.0.0.0",
     "forecastle.dhcp.intern.gv",
 ]
 

@@ -11,5 +11,6 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/inst
 ENV PATH "/root/.local/bin:$PATH"
 COPY poetry.lock pyproject.toml /code/
 RUN poetry config virtualenvs.create false
+ENV CURL_CA_BUNDLE=""
 RUN poetry install --no-interaction --no-ansi
-COPY . /code/
+RUN pip install requests
