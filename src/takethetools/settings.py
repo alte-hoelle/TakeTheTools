@@ -17,8 +17,18 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 ENVIRONMENT = "dev"
+
+ALLOWED_HOSTS = [
+    "10.10.0.210",
+    "10.10.0.67",
+    "127.0.0.1",
+    "10.10.0.88",
+    "10.10.0.219",
+    "0.0.0.0",
+    "forecastle.dhcp.intern.gv",
+]
 
 # pylint: disable=unused-import
 if ENVIRONMENT == "dev":
@@ -142,15 +152,6 @@ BOOTSTRAP4 = {
     "include_jquery": True,
 }
 
-ALLOWED_HOSTS = [
-    "10.10.0.210",
-    "10.10.0.67",
-    "127.0.0.1",
-    "10.10.0.88",
-    "10.10.0.219",
-    "0.0.0.0",
-    "forecastle.dhcp.intern.gv",
-]
 
 TOOL_IMAGE_FOLDER = "img/tool_icons"
 
