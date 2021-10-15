@@ -34,9 +34,9 @@ class CustomImage(models.Model):
     def __str__(self) -> str:
         return str(self.image)
 
-    def save(self, path: str = "", filename: str = "", *args, **kwargs) -> bool:
+    def save(self, path: str="", filename: str="", *args, **kwargs) -> bool: # pylint: disable=keyword-arg-before-vararg,arguments-differ
         if path in (None, "") and filename in (None, ""):
-            super(CustomImage, self).save(*args, **kwargs)
+            super(CustomImage, self).save(*args, **kwargs) # pylint: disable=super-with-arguments
             return False
         if "http" in path:
             request = requests.get(path, stream=True)
@@ -50,7 +50,7 @@ class CustomImage(models.Model):
                     self.image = "icons/" + filename
                 except Exception:
                     return False
-                super(CustomImage, self).save(*args, **kwargs)
+                super(CustomImage, self).save(*args, **kwargs) # pylint: disable=super-with-arguments
                 return True
         return False
 
