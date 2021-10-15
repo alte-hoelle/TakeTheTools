@@ -105,7 +105,8 @@ module = [
      "django_filters.views",
      "PIL",
      "barcode",
-     "barcode.writer"]
+     "barcode.writer",
+     "takethetools.secrets_prod"]
 ignore_missing_imports = true
 
 [tool.django-stubs]

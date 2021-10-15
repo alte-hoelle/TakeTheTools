@@ -1,3 +1,3 @@
 """ don't use this secrets for prod! """
-SECRET_KEY = "supersecretkey"
-CHIP_SALT = "supersecretsalt"
+DEV_CHIP_SALT = "supersecretkey"
+DEV_SECRET_KEY = "supersecretsalt"
