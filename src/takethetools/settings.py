@@ -24,7 +24,7 @@ ENVIRONMENT = "dev"
 if ENVIRONMENT == "dev":
     from .secrets_dev import CHIP_SALT, SECRET_KEY
 else:
-    from .secrets_prod import CHIP_SALT, SECRET_KEY
+    from .secrets_prod import CHIP_SALT, SECRET_KEY # pylint: disable=import-error
 
 # Application definition
 
