@@ -1,12 +1,11 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict
 
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Model
 
 from .models import CustomImage, Note, Purpose, Tool
 
@@ -18,7 +17,7 @@ class UserRegistrationForm(forms.Form):
     )
     email = forms.CharField(max_length=100, label="Mail")
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = "form-row p-3 mt-4 mb-4 border bg-light form-inline"
@@ -81,18 +80,19 @@ class CheckoutForm(forms.Form):
     purpose = forms.ModelChoiceField(label="Zweck", queryset=Purpose.objects.all())
     lendby = forms.CharField(label="ChipID")
 
-    def clean(self) -> None:
+    def clean(self) -> Dict[str, Any]:
         # this is not working as expected, no visible message is raised
         cleaned_data = super().clean()
         if cleaned_data["expected_end"] < datetime.today().date():
             raise forms.ValidationError("Rückgabedatum vor Ausleihdatum")
+        return cleaned_data
 
 
 class CheckinForm(forms.Form):
     returned_by = forms.CharField(label="ChipID")
 
 
-class ToolRegistrationForm(forms.ModelForm):
+class ToolRegistrationForm(forms.ModelForm):  # type: ignore
     """
     This form is used to register new tools. If everything else is clean,
     image from the image-url (if any) is downloaded and saved. If any error
@@ -135,26 +135,22 @@ class ToolRegistrationForm(forms.ModelForm):
             "barcode_ean13_no_check_bit": "Barcode",
         }
 
-    def clean(self) -> None:
+    def clean(self) -> Dict[str, Any]:
         cleaned_data = super().clean()
         image_link = cleaned_data.get("link")
         # cleaned_data['present_amount'] = cleaned_data['available_amount']
         if image_link not in ("", None):
 
             image = CustomImage()
-            image.supplied_source = cleaned_data.get("link")
-            f_name = (
-                cleaned_data.get("name")
-                + "_"
-                + cleaned_data.get("brand")
-                + "_"
-                + cleaned_data.get("model")
-                + "_"
-                + cleaned_data.get("barcode_ean13_no_check_bit")
-                + ".jpg"
-            )
+            link = f"{cleaned_data.get('link')}"
+            image.supplied_source = link
+            name = cleaned_data.get("name")
+            brand = cleaned_data.get("brand")
+            model = cleaned_data.get("model")
+            barcode = cleaned_data.get("barcode_ean13_no_check_bit")
+            f_name = f"{name}_{brand}_{model}_{barcode}.jpg"
 
-            if not image.save(cleaned_data.get("link"), f_name):
+            if not image.save(link, f_name):
                 raise ValidationError(
                     "Image from given Link not downloadable or not an Image."
                 )
@@ -169,9 +165,10 @@ class ToolRegistrationForm(forms.ModelForm):
                 raise ValidationError(
                     "No default image exists, either mark one as default or add a picture URL"
                 ) from no_default_image
+        return cleaned_data
 
-    def save(self, commit=True) -> Model:
-        tool = super().save(commit=False)  # here the object is not commited in db
+    def save(self, commit: bool = True) -> Tool:
+        tool: Tool = super().save(commit=False)  # here the object is not commited in db
         tool.present_amount = self.cleaned_data["available_amount"]
         tool.save()
         return tool
@@ -186,13 +183,14 @@ class ExportSelectionForm(forms.Form):
                 label=str(tool), initial=0, required=True, min_value=0
             )
 
-    def get_interest_fields(self) -> None:
-        for field_name in self.fields:
-            print(self[field_name].value)
-            yield self[field_name]
+
+#    def get_interest_fields(self) -> None:
+#        for field_name in self.fields:
+#            print(self[field_name].value)
+#            yield self[field_name]
 
 
-class NoteForm(forms.ModelForm):
+class NoteForm(forms.ModelForm):  # type: ignore
     class Meta:
         model = Note
         fields = ("title", "text", "prio", "author")

@@ -101,7 +101,11 @@ module = [
      "crispy_forms.helper",
      "crispy_forms.layout",
      "django_tables2",
-     "PIL"]
+     "django_filters",
+     "django_filters.views",
+     "PIL",
+     "barcode",
+     "barcode.writer"]
 ignore_missing_imports = true
 
 [tool.django-stubs]

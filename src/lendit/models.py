@@ -35,7 +35,7 @@ class CustomImage(models.Model):
         return str(self.image)
 
     # pylint: disable=keyword-arg-before-vararg,arguments-differ
-    def save(self, path: str = "", filename: str = "", *args, **kwargs) -> bool:
+    def save(self, path: str = "", filename: str = "", *args, **kwargs) -> bool:  # type: ignore
         if path in (None, "") and filename in (None, ""):
             # pylint: disable=super-with-arguments
             super(CustomImage, self).save(*args, **kwargs)
@@ -89,6 +89,8 @@ class Tool(models.Model):
     barcode_ean13_no_check_bit = models.CharField(
         unique=True, max_length=12, default=gen_random_ean13_no_checkbit
     )
+    img_local_link: str = ""
+    used_img_urls: str = ""
 
     def __str__(self) -> str:
         return str(self.name) + " " + str(self.brand)

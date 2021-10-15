@@ -35,8 +35,6 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint src/* --disable=fixme
-        
-    # deactivated because of to many errors we must fix later
-#    - name: mypy 
-#      run: |
-#        MYPYPATH=src mypy src
+    - name: mypy 
+      run: |
+        MYPYPATH=src mypy src
