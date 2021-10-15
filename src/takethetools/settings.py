@@ -18,7 +18,7 @@ from django.contrib.messages import constants as messages
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
-ENVIRONMENT = "prod"
+ENVIRONMENT = "dev"
 
 # pylint: disable=unused-import
 if ENVIRONMENT == "dev":
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "src.wsgi.application"
+WSGI_APPLICATION = "takethetools.wsgi.application"
 
 
 # Database
