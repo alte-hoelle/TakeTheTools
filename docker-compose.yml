@@ -1,8 +1,16 @@
-takethetools:
-    build: .
-    container_name: takethetools
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-        - "8080:8080"
-    volumes:
-      - .:/takethetools
+version: "3"
+
+services:
+    takethetools:
+        build: .
+        container_name: takethetools
+        working_dir: /code/src
+        command: >
+            bash -c "python manage.py makemigrations lendit &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8080"
+        ports:
+            - "8080:8080"
+        volumes:
+          - ./src:/code/src
+          - ./database:/code/database
