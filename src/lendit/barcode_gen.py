@@ -9,14 +9,14 @@ from .models import Tool
 
 
 class Sheet:
-    def __init__(self):
+    def __init__(self) -> None:
         self.barcodes = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         pass
 
     # pylint: disable=too-many-locals,too-many-statements
-    def export(self):
+    def export(self) -> None:
         os.system("rm -r pa*")
         os.system("mkdir barcodes")
         x_images = 0
@@ -108,7 +108,7 @@ class Sheet:
 
         os.system("rm -r barcodes")
 
-    def add_tool(self, barcode, number):
+    def add_tool(self, barcode: int, number: int) -> None:
         try:
             tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
         except Exception as exception:
@@ -126,12 +126,12 @@ class Sheet:
             ]
         )
 
-    def list(self):
+    def list(self) -> None:
         for barcode in self.barcodes:
             print(barcode)
 
 
-def fix_ids_to_ean13():
+def fix_ids_to_ean13() -> None:
     tools = Tool.objects.all()
     for tool in tools:
         if len(str(tool.id)) == 13:

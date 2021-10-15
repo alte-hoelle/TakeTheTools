@@ -1,11 +1,14 @@
 import random
 import string
 from datetime import datetime
+from typing import Tuple
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.db.models import QuerySet
+from django.forms import Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -57,19 +60,19 @@ class Notes(View):
     form_class = NoteForm
     # table_class = NoteTable
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         form = self.form_class
         return render(
             request, self.template_name, {"form": form, "notes": self.get_queryset()}
         )
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
         return redirect("notes")
 
-    def get_queryset(self, *args, **kwargs):  # pylint: disable=no-self-use
+    def get_queryset(self, *args, **kwargs) -> QuerySet:  # pylint: disable=no-self-use
         return Note.objects.order_by("date")
 
 
@@ -85,7 +88,7 @@ class LendLogView(SingleTableView):
     table_class = LendLogTable
     template_name = "stats.html"
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self, *args, **kwargs) -> QuerySet:
         return Lendlog.objects.order_by("-status")
 
 
@@ -163,7 +166,7 @@ def lend_tool(
     end: int = datetime.today(),
     chip_id: str = "",
     purpose: str = "Verein",
-):
+) -> Tuple[bool, str]:
 
     current_tool = Tool.objects.get(barcode_ean13_no_check_bit=barcode)
     purpose = Purpose.objects.get(name=purpose)
@@ -192,7 +195,7 @@ def lend_tool(
     return True, ""
 
 
-def checkout_lend(request: HttpRequest, form) -> HttpResponse:
+def checkout_lend(request: HttpRequest, form: Form) -> HttpResponse:
     if form.is_valid():
         ids = request.session["cart"]
         id_list = ids.split(",")
@@ -220,7 +223,7 @@ def checkout_lend(request: HttpRequest, form) -> HttpResponse:
     return redirect("cart")
 
 
-def checkout_return(request: HttpRequest, form_in) -> HttpResponse:
+def checkout_return(request: HttpRequest, form_in: Form) -> HttpResponse:
     if form_in.is_valid():
         ids = request.session["cart"]
         try:
@@ -275,9 +278,8 @@ def checkout(request: HttpRequest) -> HttpResponse:
         return redirect("cart")
     if "lend" in request.POST:
         return checkout_lend(request, form)
-    elif "return" in request.POST:
+    if "return" in request.POST:
         return checkout_return(request, form_in)
-
     return redirect("cart")
 
 
@@ -317,7 +319,7 @@ def clearbasket(request: HttpRequest) -> HttpResponse:
     return redirect("cart")
 
 
-def cart(request: HttpRequest):
+def cart(request: HttpRequest) -> HttpResponse:
 
     display_dict = {}
     try:

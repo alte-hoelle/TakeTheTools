@@ -12,7 +12,7 @@ class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     chip_id = models.CharField(max_length=512)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.user.username
 
 
@@ -21,7 +21,7 @@ class Category(models.Model):
     needs_power = models.BooleanField(default=False)
     needs_battery = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -31,10 +31,10 @@ class CustomImage(models.Model):
     description = models.CharField(max_length=100, default="", blank=True)
     default = models.BooleanField(default=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.image)
 
-    def save(self, path="", filename="", *args, **kwargs):
+    def save(self, path: str="", filename: str="", *args, **kwargs) -> bool:
         if path in (None, "") and filename in (None, ""):
             super(CustomImage, self).save(*args, **kwargs)
             return False
@@ -60,7 +60,7 @@ class CustomImage(models.Model):
         # try:
         #    pilimage = Image.open(path)
         # except:
-        #    pilimage = Image.open("/home/stoerte/Software/django-begin/takethetools/staticfiles/img/tool_icons/default.png")
+        #    pilimage = Image.open("/home/stoerte/Software/django-begin/src/staticfiles/img/tool_icons/default.png")
 
 
 class Tool(models.Model):
@@ -87,7 +87,7 @@ class Tool(models.Model):
         unique=True, max_length=12, default=gen_random_ean13_no_checkbit
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.name) + " " + str(self.brand)
 
 
@@ -95,7 +95,7 @@ class Purpose(models.Model):
     name = models.CharField(max_length=30)
     multiplier = models.FloatField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -124,7 +124,7 @@ class Lendlog(models.Model):
     return_comment = models.CharField(max_length=120, default="")
     lend_comment = models.CharField(max_length=120, default="")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Tool " + self.tool.name + " by " + str(self.lend_by)
 
 
@@ -142,5 +142,5 @@ class Note(models.Model):
     )
     date = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.title)
