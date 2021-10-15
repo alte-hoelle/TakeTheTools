@@ -1,9 +1,9 @@
-name: Pylint
+name: check
 
 on: [push]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,6 +23,20 @@ jobs:
       run: | 
         poetry config virtualenvs.create false
         poetry install --no-interaction --no-ansi
+    - name: poetry check
+      run: |
+        poetry check 
+    - name: isort 
+      run: |
+        isort --check-only .
+    - name: black check
+      run: |
+        black src --check
     - name: Analysing the code with pylint
       run: |
         pylint src/* --disable=fixme
+        
+    # deactivated because of to many errors we must fix later
+#    - name: mypy 
+#      run: |
+#        MYPYPATH=src mypy src
