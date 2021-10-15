@@ -9,17 +9,41 @@ This works by first making inventory of all our stuff and afterwards sticking th
 with 125 kHz RFID chips. They can than scan all the tools they want to borrow and enter an expected return date. Afterwards they can checkout their cart with either
 their chip or a username/password combination.
 
-## Installation
-Clone the repo to a directory of your choice. Install [poetry](https://python-poetry.org/docs/) for installing dependencies. Afterwards issue the following commands within the repo-directory:
+## deployment
+
+Clone the repo to a directory of your choice. Install [poetry](https://python-poetry.org/docs/) for installing dependencies.  
+Copy ```src/takethetools/secrets_dev.py``` to ```src/takethetools/secrets_prod.py``` and insert random salts.  
+Edit ```src/takethetools/settings.py``` and set ```ENVIRONMENT``` to ```prod``` and make sure the right IPs or Hostnames are set in ```ALLOWED_HOSTS```.  
+
+Afterwards issue the following commands within the repo-directory: 
+
+### the manual way
+
 ```bash
 poetry install
 poetry shell
-PYTHONPATH=src 
+cd src 
 python manage.py makemigrations lendit
 python manage.py migrate
 python manage.py runserver 8080
 ```
 The server should be reachable via [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
+
+### docker
+
+```bash
+docker-compose build
+docker-compose up -d
+```
+The server should be reachable via [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
+
+## development
+
+### github actions local run
+
+Install ```act``` by following the installation guide: https://github.com/nektos/act
+
+run ```act``` in the project dir. That's all.
 
 ## Setup
 
